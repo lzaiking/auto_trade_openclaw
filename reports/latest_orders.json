@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-03-23",
+  "starting_capital": 50000.0,
+  "orders": [
+    {
+      "symbol": "SHY",
+      "side": "BUY",
+      "qty": 2172,
+      "est_price": 82.43,
+      "est_value": 179037.96,
+      "target_weight": 1.0
+    }
+  ]
+}
