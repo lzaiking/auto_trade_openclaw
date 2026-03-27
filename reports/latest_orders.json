@@ -5,14 +5,12 @@
     {
       "symbol": "SHY",
       "side": "BUY",
-      "qty": 1546,
+      "qty": 1596,
       "est_price": 82.22,
-      "est_value": 127112.12,
+      "est_value": 131223.12,
       "target_weight": 1.0,
-      "stop_loss_pct": 0.08,
-      "stop_loss_price": 75.64,
-      "take_profit_pct": 0.12,
-      "take_profit_price": 92.09
+      "stop_loss_pct": 0.1,
+      "stop_loss_price": 74.0
     }
   ]
 }

@@ -1,14 +1,26 @@
 {
   "as_of": "2026-03-26",
   "start_capital": 50000.0,
-  "end_equity": 127112.17,
-  "total_return": 1.5422,
-  "cagr": 0.2322,
-  "annualized_volatility": 0.2004,
-  "sharpe": 1.1428,
-  "max_drawdown": 0.2004,
+  "end_equity": 131256.6,
+  "total_return": 1.6251,
+  "cagr": 0.2411,
+  "annualized_volatility": 0.2136,
+  "sharpe": 1.1188,
+  "max_drawdown": 0.1976,
   "max_drawdown_target": 0.2,
-  "meets_drawdown_target": false,
+  "meets_drawdown_target": true,
+  "beats_benchmark_total_return": true,
+  "beats_benchmark_cagr": true,
+  "max_drawdown_below_benchmark": true,
+  "benchmark": {
+    "symbol": "QQQ",
+    "end_equity": 81962.97,
+    "total_return": 0.6393,
+    "cagr": 0.117,
+    "annualized_volatility": 0.2308,
+    "sharpe": 0.595,
+    "max_drawdown": 0.3512
+  },
   "latest_target_weights": {
     "SHY": 1.0
   },
@@ -27,12 +39,17 @@
   "safe_asset": "SHY",
   "logic": {
     "ranking": "21/63/126-day weighted momentum divided by 20-day volatility, only above 200-day SMA",
-    "selection": "Top 3 stocks from growth universe",
-    "risk": "Benchmark (QQQ and SPY) regime filter + inverse volatility sizing + drawdown governor + SHY fallback + volatility-adaptive trailing stop-loss and take-profit",
+    "selection": "Top 4 stocks from growth universe",
+    "risk": "Partial regime filter (QQQ/SPY 200-day SMA), inverse volatility sizing, softer drawdown governor, SHY fallback, volatility-adaptive trailing stop-loss",
     "rebalance": "Every 21 trading days",
     "exit_bands": {
-      "stop_loss": "20-day volatility \u00d7 2.5, clamped to 8%-20%, trailing from post-entry high",
-      "take_profit": "20-day volatility \u00d7 5.0, clamped to 12%-35%, measured from entry price"
+      "stop_loss": "20-day volatility \u00d7 2.3, clamped to 10%-22%, trailing from post-entry high",
+      "take_profit": "Disabled by default to avoid cutting long trends too early"
+    },
+    "regime_exposure": {
+      "risk_on": "100% risk budget when both QQQ and SPY are above 200-day SMA",
+      "mixed": "45% risk budget when only one of QQQ/SPY is above 200-day SMA",
+      "risk_off": "100% SHY when both QQQ and SPY are below 200-day SMA"
     }
   }
 }

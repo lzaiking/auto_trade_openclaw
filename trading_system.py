@@ -31,13 +31,13 @@ UNIVERSE = [
 SAFE_ASSET = "SHY"  # short treasury ETF proxy for cash-like parking
 BENCHMARK = "QQQ"
 REBALANCE_EVERY_N_DAYS = 21
-TOP_N = 3
-STOP_LOSS_VOL_MULTIPLIER = 2.5
-TAKE_PROFIT_VOL_MULTIPLIER = 5.0
-MIN_STOP_LOSS_PCT = 0.08
-MAX_STOP_LOSS_PCT = 0.20
-MIN_TAKE_PROFIT_PCT = 0.12
-MAX_TAKE_PROFIT_PCT = 0.35
+TOP_N = 4
+STOP_LOSS_VOL_MULTIPLIER = 2.3
+MIN_STOP_LOSS_PCT = 0.10
+MAX_STOP_LOSS_PCT = 0.22
+PARTIAL_REGIME_EXPOSURE = 0.45
+DISABLE_HARD_TAKE_PROFIT = True
+HARD_TAKE_PROFIT_PCT = 0.60
 
 
 @dataclass
@@ -126,27 +126,32 @@ def score_symbol(sym: str, prices: Dict[str, List[float]], i: int) -> float:
     return (raw / vol) * trend_ok
 
 
-def market_regime(prices: Dict[str, List[float]], i: int) -> bool:
+def regime_exposure(prices: Dict[str, List[float]], i: int) -> float:
     q = prices[BENCHMARK]
     spy = prices["SPY"]
-    return q[i] > sma(q, 200, i) and spy[i] > sma(spy, 200, i)
+    q_above = q[i] > sma(q, 200, i)
+    spy_above = spy[i] > sma(spy, 200, i)
+    if q_above and spy_above:
+        return 1.0
+    if q_above or spy_above:
+        return PARTIAL_REGIME_EXPOSURE
+    return 0.0
 
 
 def clamp(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, x))
 
 
-def dynamic_risk_bands(prices: Dict[str, List[float]], sym: str, i: int) -> Tuple[float, float]:
+def dynamic_stop_pct(prices: Dict[str, List[float]], sym: str, i: int) -> float:
     vol = stdev_daily_returns(prices[sym], 20, i)
-    stop_pct = clamp(vol * math.sqrt(20) * STOP_LOSS_VOL_MULTIPLIER, MIN_STOP_LOSS_PCT, MAX_STOP_LOSS_PCT)
-    take_profit_pct = clamp(vol * math.sqrt(20) * TAKE_PROFIT_VOL_MULTIPLIER, MIN_TAKE_PROFIT_PCT, MAX_TAKE_PROFIT_PCT)
-    return stop_pct, take_profit_pct
+    return clamp(vol * math.sqrt(20) * STOP_LOSS_VOL_MULTIPLIER, MIN_STOP_LOSS_PCT, MAX_STOP_LOSS_PCT)
 
 
 def target_weights(prices: Dict[str, List[float]], i: int, equity: float, peak: float) -> Dict[str, float]:
     weights = {sym: 0.0 for sym in prices.keys()}
     dd = 0.0 if peak <= 0 else 1.0 - equity / peak
-    if not market_regime(prices, i):
+    regime_gross = regime_exposure(prices, i)
+    if regime_gross <= 0:
         weights[SAFE_ASSET] = 1.0
         return weights
 
@@ -166,17 +171,50 @@ def target_weights(prices: Dict[str, List[float]], i: int, equity: float, peak: 
         vol = stdev_daily_returns(prices[sym], 20, i) or 0.0001
         inv_vols.append((1.0 / vol, sym))
     total = sum(v for v, _ in inv_vols)
-    gross = 1.0
+    gross = regime_gross
     if dd > 0.10:
-        gross = 0.75
+        gross *= 0.85
     if dd > 0.15:
-        gross = 0.50
-    if dd > 0.18:
-        gross = 0.0
+        gross *= 0.60
+    if dd > 0.19:
+        gross *= 0.30
     for inv_vol, sym in inv_vols:
         weights[sym] = gross * inv_vol / total
     weights[SAFE_ASSET] = 1.0 - sum(weights.values())
     return weights
+
+
+def compute_benchmark_metrics(dates: List[date], prices: Dict[str, List[float]], start_i: int) -> Dict[str, object]:
+    benchmark_prices = prices[BENCHMARK][start_i:]
+    benchmark_equity = [START_CAPITAL * px / benchmark_prices[0] for px in benchmark_prices]
+    peak = benchmark_equity[0]
+    benchmark_curve = []
+    for d, eq in zip(dates[start_i:], benchmark_equity):
+        peak = max(peak, eq)
+        benchmark_curve.append({
+            "date": d.isoformat(),
+            "benchmark_equity": round(eq, 2),
+            "benchmark_drawdown": round(1.0 - eq / peak, 6),
+        })
+    daily_returns = [benchmark_equity[i] / benchmark_equity[i - 1] - 1.0 for i in range(1, len(benchmark_equity))]
+    years = max(len(benchmark_equity) / 252.0, 1e-9)
+    total_return = benchmark_equity[-1] / START_CAPITAL - 1.0
+    cagr = (benchmark_equity[-1] / START_CAPITAL) ** (1 / years) - 1.0
+    vol = statistics.pstdev(daily_returns) * math.sqrt(252) if daily_returns else 0.0
+    sharpe = (statistics.mean(daily_returns) / statistics.pstdev(daily_returns) * math.sqrt(252)) if len(daily_returns) > 1 and statistics.pstdev(daily_returns) > 0 else 0.0
+    max_dd = max(row["benchmark_drawdown"] for row in benchmark_curve)
+    return {
+        "curve": benchmark_curve,
+        "summary": {
+            "symbol": BENCHMARK,
+            "end_equity": round(benchmark_equity[-1], 2),
+            "total_return": round(total_return, 4),
+            "cagr": round(cagr, 4),
+            "annualized_volatility": round(vol, 4),
+            "sharpe": round(sharpe, 4),
+            "max_drawdown": round(max_dd, 4),
+        },
+    }
 
 
 def backtest() -> Dict[str, object]:
@@ -207,12 +245,13 @@ def backtest() -> Dict[str, object]:
                 continue
             px = prices[sym][i]
             highest_prices[sym] = max(highest_prices[sym], px)
-            stop_pct, take_profit_pct = dynamic_risk_bands(prices, sym, i)
+            stop_pct = dynamic_stop_pct(prices, sym, i)
             trailing_stop = highest_prices[sym] * (1.0 - stop_pct)
-            take_profit_line = entry_prices[sym] * (1.0 + take_profit_pct)
+            take_profit_line = entry_prices[sym] * (1.0 + HARD_TAKE_PROFIT_PCT)
             stop_lines[sym] = trailing_stop
-            take_profit_lines[sym] = take_profit_line
-            if px <= trailing_stop or px >= take_profit_line:
+            take_profit_lines[sym] = 0.0 if DISABLE_HARD_TAKE_PROFIT else take_profit_line
+            hard_take_profit_hit = (not DISABLE_HARD_TAKE_PROFIT) and px >= take_profit_line
+            if px <= trailing_stop or hard_take_profit_hit:
                 cash += holdings[sym] * px
                 holdings[sym] = 0.0
                 entry_prices[sym] = 0.0
@@ -246,9 +285,9 @@ def backtest() -> Dict[str, object]:
                         highest_prices[sym] = px
                     else:
                         highest_prices[sym] = max(highest_prices[sym], px)
-                    stop_pct, take_profit_pct = dynamic_risk_bands(prices, sym, i)
+                    stop_pct = dynamic_stop_pct(prices, sym, i)
                     stop_lines[sym] = highest_prices[sym] * (1.0 - stop_pct)
-                    take_profit_lines[sym] = entry_prices[sym] * (1.0 + take_profit_pct)
+                    take_profit_lines[sym] = 0.0 if DISABLE_HARD_TAKE_PROFIT else entry_prices[sym] * (1.0 + HARD_TAKE_PROFIT_PCT)
                 else:
                     entry_prices[sym] = 0.0
                     highest_prices[sym] = 0.0
@@ -268,6 +307,10 @@ def backtest() -> Dict[str, object]:
             **{f"tp_{sym}": round(take_profit_lines.get(sym, 0.0), 4) for sym in symbols if last_weights.get(sym, 0.0) > 0},
         })
 
+    benchmark = compute_benchmark_metrics(dates, prices, start_i)
+    for row, bench_row in zip(equity_curve, benchmark["curve"]):
+        row["benchmark_equity"] = bench_row["benchmark_equity"]
+        row["benchmark_drawdown"] = bench_row["benchmark_drawdown"]
     save_csv(REPORT_DIR / "equity_curve.csv", equity_curve, list(equity_curve[0].keys()))
 
     equities = [row["equity"] for row in equity_curve]
@@ -291,8 +334,8 @@ def backtest() -> Dict[str, object]:
         px = prices[sym][latest_i]
         qty = math.floor(latest_equity * w / px)
         if qty > 0:
-            stop_pct, take_profit_pct = dynamic_risk_bands(prices, sym, latest_i)
-            orders.append({
+            stop_pct = dynamic_stop_pct(prices, sym, latest_i)
+            order = {
                 "symbol": sym,
                 "side": "BUY",
                 "qty": qty,
@@ -301,12 +344,15 @@ def backtest() -> Dict[str, object]:
                 "target_weight": round(w, 4),
                 "stop_loss_pct": round(stop_pct, 4),
                 "stop_loss_price": round(px * (1.0 - stop_pct), 2),
-                "take_profit_pct": round(take_profit_pct, 4),
-                "take_profit_price": round(px * (1.0 + take_profit_pct), 2),
-            })
+            }
+            if not DISABLE_HARD_TAKE_PROFIT:
+                order["take_profit_pct"] = round(HARD_TAKE_PROFIT_PCT, 4)
+                order["take_profit_price"] = round(px * (1.0 + HARD_TAKE_PROFIT_PCT), 2)
+            orders.append(order)
     with (REPORT_DIR / "latest_orders.json").open("w") as f:
         json.dump({"as_of": dates[-1].isoformat(), "starting_capital": START_CAPITAL, "orders": orders}, f, indent=2)
 
+    benchmark_summary = benchmark["summary"]
     summary = {
         "as_of": dates[-1].isoformat(),
         "start_capital": START_CAPITAL,
@@ -318,17 +364,26 @@ def backtest() -> Dict[str, object]:
         "max_drawdown": round(max_dd, 4),
         "max_drawdown_target": MAX_DRAWDOWN_TARGET,
         "meets_drawdown_target": max_dd <= MAX_DRAWDOWN_TARGET,
+        "beats_benchmark_total_return": total_return > benchmark_summary["total_return"],
+        "beats_benchmark_cagr": cagr > benchmark_summary["cagr"],
+        "max_drawdown_below_benchmark": max_dd < benchmark_summary["max_drawdown"],
+        "benchmark": benchmark_summary,
         "latest_target_weights": {k: round(v, 4) for k, v in latest_weights.items() if v > 0},
         "universe": UNIVERSE,
         "safe_asset": SAFE_ASSET,
         "logic": {
             "ranking": "21/63/126-day weighted momentum divided by 20-day volatility, only above 200-day SMA",
             "selection": f"Top {TOP_N} stocks from growth universe",
-            "risk": "Benchmark (QQQ and SPY) regime filter + inverse volatility sizing + drawdown governor + SHY fallback + volatility-adaptive trailing stop-loss and take-profit",
+            "risk": "Partial regime filter (QQQ/SPY 200-day SMA), inverse volatility sizing, softer drawdown governor, SHY fallback, volatility-adaptive trailing stop-loss",
             "rebalance": f"Every {REBALANCE_EVERY_N_DAYS} trading days",
             "exit_bands": {
                 "stop_loss": f"20-day volatility × {STOP_LOSS_VOL_MULTIPLIER}, clamped to {MIN_STOP_LOSS_PCT:.0%}-{MAX_STOP_LOSS_PCT:.0%}, trailing from post-entry high",
-                "take_profit": f"20-day volatility × {TAKE_PROFIT_VOL_MULTIPLIER}, clamped to {MIN_TAKE_PROFIT_PCT:.0%}-{MAX_TAKE_PROFIT_PCT:.0%}, measured from entry price",
+                "take_profit": "Disabled by default to avoid cutting long trends too early" if DISABLE_HARD_TAKE_PROFIT else f"Fixed {HARD_TAKE_PROFIT_PCT:.0%} hard take-profit from entry price",
+            },
+            "regime_exposure": {
+                "risk_on": "100% risk budget when both QQQ and SPY are above 200-day SMA",
+                "mixed": f"{PARTIAL_REGIME_EXPOSURE:.0%} risk budget when only one of QQQ/SPY is above 200-day SMA",
+                "risk_off": "100% SHY when both QQQ and SPY are below 200-day SMA",
             },
         },
     }
