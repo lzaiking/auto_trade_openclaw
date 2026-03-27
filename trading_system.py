@@ -32,6 +32,12 @@ SAFE_ASSET = "SHY"  # short treasury ETF proxy for cash-like parking
 BENCHMARK = "QQQ"
 REBALANCE_EVERY_N_DAYS = 21
 TOP_N = 3
+STOP_LOSS_VOL_MULTIPLIER = 2.5
+TAKE_PROFIT_VOL_MULTIPLIER = 5.0
+MIN_STOP_LOSS_PCT = 0.08
+MAX_STOP_LOSS_PCT = 0.20
+MIN_TAKE_PROFIT_PCT = 0.12
+MAX_TAKE_PROFIT_PCT = 0.35
 
 
 @dataclass
@@ -58,8 +64,15 @@ def fetch_stooq(symbol: str) -> List[Bar]:
 
 def save_csv(path: Path, rows: List[Dict[str, object]], fieldnames: List[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    all_fields = list(fieldnames)
+    seen = set(all_fields)
+    for row in rows:
+        for key in row.keys():
+            if key not in seen:
+                all_fields.append(key)
+                seen.add(key)
     with path.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=all_fields)
         writer.writeheader()
         writer.writerows(rows)
 
@@ -119,6 +132,17 @@ def market_regime(prices: Dict[str, List[float]], i: int) -> bool:
     return q[i] > sma(q, 200, i) and spy[i] > sma(spy, 200, i)
 
 
+def clamp(x: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, x))
+
+
+def dynamic_risk_bands(prices: Dict[str, List[float]], sym: str, i: int) -> Tuple[float, float]:
+    vol = stdev_daily_returns(prices[sym], 20, i)
+    stop_pct = clamp(vol * math.sqrt(20) * STOP_LOSS_VOL_MULTIPLIER, MIN_STOP_LOSS_PCT, MAX_STOP_LOSS_PCT)
+    take_profit_pct = clamp(vol * math.sqrt(20) * TAKE_PROFIT_VOL_MULTIPLIER, MIN_TAKE_PROFIT_PCT, MAX_TAKE_PROFIT_PCT)
+    return stop_pct, take_profit_pct
+
+
 def target_weights(prices: Dict[str, List[float]], i: int, equity: float, peak: float) -> Dict[str, float]:
     weights = {sym: 0.0 for sym in prices.keys()}
     dd = 0.0 if peak <= 0 else 1.0 - equity / peak
@@ -169,9 +193,33 @@ def backtest() -> Dict[str, object]:
     equity_curve = []
     last_rebalance = -999
     last_weights = {sym: 0.0 for sym in symbols}
+    entry_prices = {sym: 0.0 for sym in symbols}
+    highest_prices = {sym: 0.0 for sym in symbols}
+    stop_lines = {sym: 0.0 for sym in symbols}
+    take_profit_lines = {sym: 0.0 for sym in symbols}
 
     for i in range(start_i, len(dates)):
         d = dates[i]
+
+        # daily risk management on existing positions
+        for sym in symbols:
+            if sym == SAFE_ASSET or holdings[sym] <= 0:
+                continue
+            px = prices[sym][i]
+            highest_prices[sym] = max(highest_prices[sym], px)
+            stop_pct, take_profit_pct = dynamic_risk_bands(prices, sym, i)
+            trailing_stop = highest_prices[sym] * (1.0 - stop_pct)
+            take_profit_line = entry_prices[sym] * (1.0 + take_profit_pct)
+            stop_lines[sym] = trailing_stop
+            take_profit_lines[sym] = take_profit_line
+            if px <= trailing_stop or px >= take_profit_line:
+                cash += holdings[sym] * px
+                holdings[sym] = 0.0
+                entry_prices[sym] = 0.0
+                highest_prices[sym] = 0.0
+                stop_lines[sym] = 0.0
+                take_profit_lines[sym] = 0.0
+
         equity = cash + sum(holdings[sym] * prices[sym][i] for sym in symbols)
         peak = max(peak, equity)
         if i - last_rebalance >= REBALANCE_EVERY_N_DAYS:
@@ -185,10 +233,27 @@ def backtest() -> Dict[str, object]:
                 shares = math.floor(target_values[sym] / px) if px > 0 else 0
                 new_holdings[sym] = float(shares)
                 spent += shares * px
+            previous_holdings = holdings
             holdings = new_holdings
             cash = equity - spent
             last_rebalance = i
             last_weights = weights
+            for sym in symbols:
+                px = prices[sym][i]
+                if holdings[sym] > 0:
+                    if previous_holdings.get(sym, 0.0) <= 0:
+                        entry_prices[sym] = px
+                        highest_prices[sym] = px
+                    else:
+                        highest_prices[sym] = max(highest_prices[sym], px)
+                    stop_pct, take_profit_pct = dynamic_risk_bands(prices, sym, i)
+                    stop_lines[sym] = highest_prices[sym] * (1.0 - stop_pct)
+                    take_profit_lines[sym] = entry_prices[sym] * (1.0 + take_profit_pct)
+                else:
+                    entry_prices[sym] = 0.0
+                    highest_prices[sym] = 0.0
+                    stop_lines[sym] = 0.0
+                    take_profit_lines[sym] = 0.0
             equity = cash + sum(holdings[sym] * prices[sym][i] for sym in symbols)
             peak = max(peak, equity)
 
@@ -199,6 +264,8 @@ def backtest() -> Dict[str, object]:
             "equity": round(equity, 2),
             "drawdown": round(dd, 6),
             **{f"w_{sym}": round(last_weights.get(sym, 0.0), 4) for sym in symbols},
+            **{f"stop_{sym}": round(stop_lines.get(sym, 0.0), 4) for sym in symbols if last_weights.get(sym, 0.0) > 0},
+            **{f"tp_{sym}": round(take_profit_lines.get(sym, 0.0), 4) for sym in symbols if last_weights.get(sym, 0.0) > 0},
         })
 
     save_csv(REPORT_DIR / "equity_curve.csv", equity_curve, list(equity_curve[0].keys()))
@@ -224,6 +291,7 @@ def backtest() -> Dict[str, object]:
         px = prices[sym][latest_i]
         qty = math.floor(latest_equity * w / px)
         if qty > 0:
+            stop_pct, take_profit_pct = dynamic_risk_bands(prices, sym, latest_i)
             orders.append({
                 "symbol": sym,
                 "side": "BUY",
@@ -231,6 +299,10 @@ def backtest() -> Dict[str, object]:
                 "est_price": round(px, 2),
                 "est_value": round(qty * px, 2),
                 "target_weight": round(w, 4),
+                "stop_loss_pct": round(stop_pct, 4),
+                "stop_loss_price": round(px * (1.0 - stop_pct), 2),
+                "take_profit_pct": round(take_profit_pct, 4),
+                "take_profit_price": round(px * (1.0 + take_profit_pct), 2),
             })
     with (REPORT_DIR / "latest_orders.json").open("w") as f:
         json.dump({"as_of": dates[-1].isoformat(), "starting_capital": START_CAPITAL, "orders": orders}, f, indent=2)
@@ -252,8 +324,12 @@ def backtest() -> Dict[str, object]:
         "logic": {
             "ranking": "21/63/126-day weighted momentum divided by 20-day volatility, only above 200-day SMA",
             "selection": f"Top {TOP_N} stocks from growth universe",
-            "risk": "Benchmark (QQQ and SPY) regime filter + inverse volatility sizing + drawdown governor + SHY fallback",
+            "risk": "Benchmark (QQQ and SPY) regime filter + inverse volatility sizing + drawdown governor + SHY fallback + volatility-adaptive trailing stop-loss and take-profit",
             "rebalance": f"Every {REBALANCE_EVERY_N_DAYS} trading days",
+            "exit_bands": {
+                "stop_loss": f"20-day volatility × {STOP_LOSS_VOL_MULTIPLIER}, clamped to {MIN_STOP_LOSS_PCT:.0%}-{MAX_STOP_LOSS_PCT:.0%}, trailing from post-entry high",
+                "take_profit": f"20-day volatility × {TAKE_PROFIT_VOL_MULTIPLIER}, clamped to {MIN_TAKE_PROFIT_PCT:.0%}-{MAX_TAKE_PROFIT_PCT:.0%}, measured from entry price",
+            },
         },
     }
     with (REPORT_DIR / "backtest_summary.json").open("w") as f:

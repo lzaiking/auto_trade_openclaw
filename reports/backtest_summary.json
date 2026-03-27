@@ -1,14 +1,14 @@
 {
-  "as_of": "2026-03-23",
+  "as_of": "2026-03-26",
   "start_capital": 50000.0,
-  "end_equity": 179062.7,
-  "total_return": 2.5813,
-  "cagr": 0.3315,
-  "annualized_volatility": 0.2347,
-  "sharpe": 1.3378,
-  "max_drawdown": 0.1725,
+  "end_equity": 127112.17,
+  "total_return": 1.5422,
+  "cagr": 0.2322,
+  "annualized_volatility": 0.2004,
+  "sharpe": 1.1428,
+  "max_drawdown": 0.2004,
   "max_drawdown_target": 0.2,
-  "meets_drawdown_target": true,
+  "meets_drawdown_target": false,
   "latest_target_weights": {
     "SHY": 1.0
   },
@@ -28,7 +28,11 @@
   "logic": {
     "ranking": "21/63/126-day weighted momentum divided by 20-day volatility, only above 200-day SMA",
     "selection": "Top 3 stocks from growth universe",
-    "risk": "Benchmark (QQQ and SPY) regime filter + inverse volatility sizing + drawdown governor + SHY fallback",
-    "rebalance": "Every 21 trading days"
+    "risk": "Benchmark (QQQ and SPY) regime filter + inverse volatility sizing + drawdown governor + SHY fallback + volatility-adaptive trailing stop-loss and take-profit",
+    "rebalance": "Every 21 trading days",
+    "exit_bands": {
+      "stop_loss": "20-day volatility \u00d7 2.5, clamped to 8%-20%, trailing from post-entry high",
+      "take_profit": "20-day volatility \u00d7 5.0, clamped to 12%-35%, measured from entry price"
+    }
   }
 }

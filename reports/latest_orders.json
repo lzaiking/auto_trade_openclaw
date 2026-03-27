@@ -1,14 +1,18 @@
 {
-  "as_of": "2026-03-23",
+  "as_of": "2026-03-26",
   "starting_capital": 50000.0,
   "orders": [
     {
       "symbol": "SHY",
       "side": "BUY",
-      "qty": 2172,
-      "est_price": 82.43,
-      "est_value": 179037.96,
-      "target_weight": 1.0
+      "qty": 1546,
+      "est_price": 82.22,
+      "est_value": 127112.12,
+      "target_weight": 1.0,
+      "stop_loss_pct": 0.08,
+      "stop_loss_price": 75.64,
+      "take_profit_pct": 0.12,
+      "take_profit_price": 92.09
     }
   ]
 }
