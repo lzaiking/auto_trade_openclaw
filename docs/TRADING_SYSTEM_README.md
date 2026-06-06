@@ -60,6 +60,7 @@ python3 code/trading_system.py
 
 ## 备注
 
-- 数据源优先使用 Stooq 日线 CSV，若返回空数据则回退到 Yahoo Finance chart API；两者都无需 API key
+- 数据源优先使用本地缓存 `data/prices/`，缓存过期后先尝试 Yahoo Finance chart API，再用 Stooq 兜底
+- Yahoo 请求遇到 429 限流时会退避重试；如果线上数据源失败但本地有旧缓存，会使用旧缓存继续回测
 - 这是一个研究/原型版本，不等于可直接实盘的最终系统
 - 下一步建议：加入交易成本、滑点、Walk-forward 验证、参数稳健性测试

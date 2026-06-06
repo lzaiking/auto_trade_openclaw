@@ -1,30 +1,64 @@
 {
-  "status": "pending_recompute",
-  "reason": "The strategy universe was changed to QQQ, GLD, and SGOV. Re-run code/trading_system.py when the market data providers are available.",
+  "as_of": "2026-06-05",
   "start_capital": 50000.0,
+  "end_equity": 79612.13,
+  "total_return": 0.5922,
+  "cagr": 0.0975,
+  "annualized_volatility": 0.1598,
+  "sharpe": 0.6631,
+  "max_drawdown": 0.1982,
   "max_drawdown_target": 0.2,
+  "meets_drawdown_target": true,
+  "beats_benchmark_total_return": false,
+  "beats_benchmark_cagr": false,
+  "max_drawdown_below_benchmark": true,
   "benchmark": {
-    "symbol": "QQQ"
+    "symbol": "QQQ",
+    "end_equity": 105922.12,
+    "total_return": 1.1184,
+    "cagr": 0.162,
+    "annualized_volatility": 0.2244,
+    "sharpe": 0.7817,
+    "max_drawdown": 0.3562
   },
   "dca_benchmark": {
     "symbol": "QQQ",
     "method": "monthly_equal_dollar_dca",
-    "total_principal": 50000.0
+    "total_principal": 50000.0,
+    "monthly_contribution": 819.67,
+    "end_equity": 87268.96,
+    "total_return": 0.7454,
+    "cagr": 0.1178,
+    "annualized_volatility": 0.1244,
+    "sharpe": 0.9587,
+    "max_drawdown": 0.1879
+  },
+  "beats_dca_total_return": false,
+  "beats_dca_cagr": false,
+  "max_drawdown_below_dca": false,
+  "latest_target_weights": {
+    "QQQ": 0.153,
+    "SGOV": 0.847
   },
   "universe": [
     "QQQ",
     "GLD",
     "SGOV"
   ],
-  "risk_assets": [
-    "QQQ",
-    "GLD"
-  ],
   "safe_asset": "SGOV",
   "logic": {
     "ranking": "21/63/126-day weighted momentum divided by 20-day volatility, only above 200-day SMA",
-    "selection": "Top 1 ETF from QQQ/GLD; fallback to SGOV when no ETF has positive trend-adjusted momentum",
-    "risk": "ETF-only universe, softer drawdown governor, SGOV fallback, volatility-adaptive trailing stop-loss",
-    "rebalance": "Every 21 trading days"
+    "selection": "Top 1 ETF from QQQ/GLD; fallback to SGOV when no ETF qualifies",
+    "risk": "ETF-only universe, drawdown governor, SGOV fallback, volatility-adaptive trailing stop-loss",
+    "rebalance": "Every 21 trading days",
+    "exit_bands": {
+      "stop_loss": "20-day volatility x 2.3, clamped to 10%-22%, trailing from post-entry high",
+      "take_profit": "Disabled by default to avoid cutting long trends too early"
+    },
+    "assets": {
+      "growth": "QQQ",
+      "gold": "GLD",
+      "defensive": "SGOV"
+    }
   }
 }

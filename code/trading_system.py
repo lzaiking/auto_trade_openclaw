@@ -15,10 +15,12 @@ import csv
 import json
 import math
 import statistics
+import time
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
+from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request
 from urllib.request import urlopen
@@ -27,10 +29,12 @@ START_CAPITAL = 50_000.0
 MAX_DRAWDOWN_TARGET = 0.20
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / "data"
+CACHE_DIR = DATA_DIR / "prices"
 REPORT_DIR = BASE_DIR / "report"
 REQUEST_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/125.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "application/json,text/csv,*/*",
+    "Accept-Language": "en-US,en;q=0.9",
 }
 RISK_ASSETS = ["QQQ", "GLD"]
 SAFE_ASSET = "SGOV"  # 0-3 month Treasury ETF proxy for cash-like parking
@@ -48,6 +52,12 @@ MIN_STOP_LOSS_PCT = 0.10
 MAX_STOP_LOSS_PCT = 0.22
 DISABLE_HARD_TAKE_PROFIT = True
 HARD_TAKE_PROFIT_PCT = 0.60
+CACHE_MAX_AGE_SECONDS = 18 * 60 * 60
+YAHOO_RETRY_DELAYS = [0, 2, 5, 10]
+YAHOO_HOSTS = ["query1.finance.yahoo.com", "query2.finance.yahoo.com"]
+YAHOO_START_YEAR = 1990
+YAHOO_CHUNK_YEARS = 10
+FETCH_PAUSE_SECONDS = 1.0
 
 
 @dataclass
@@ -64,6 +74,38 @@ def fetch_text(url: str) -> str:
     return urlopen(Request(url, headers=REQUEST_HEADERS), timeout=30).read().decode("utf-8")
 
 
+def cache_path(symbol: str) -> Path:
+    return CACHE_DIR / f"{symbol.upper()}.csv"
+
+
+def load_price_cache(symbol: str) -> List[Bar]:
+    path = cache_path(symbol)
+    if not path.exists():
+        return []
+    bars: List[Bar] = []
+    with path.open() as f:
+        for row in csv.DictReader(f):
+            try:
+                bars.append(Bar(datetime.strptime(row["Date"], "%Y-%m-%d").date(), float(row["Close"])))
+            except Exception:
+                continue
+    return bars
+
+
+def save_price_cache(symbol: str, bars: List[Bar]) -> None:
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    with cache_path(symbol).open("w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["Date", "Close"])
+        writer.writeheader()
+        for bar in bars:
+            writer.writerow({"Date": bar.d.isoformat(), "Close": f"{bar.close:.8f}"})
+
+
+def cache_is_fresh(symbol: str) -> bool:
+    path = cache_path(symbol)
+    return path.exists() and time.time() - path.stat().st_mtime < CACHE_MAX_AGE_SECONDS
+
+
 def fetch_stooq(symbol: str) -> List[Bar]:
     symbol_key = f"{symbol.lower()}.us"
     url = f"https://stooq.com/q/d/l/?s={symbol_key}&i=d"
@@ -78,18 +120,20 @@ def fetch_stooq(symbol: str) -> List[Bar]:
     return bars
 
 
-def fetch_yahoo(symbol: str) -> List[Bar]:
+def yahoo_url(symbol: str, period1: int, period2: int) -> str:
     params = urlencode({
-        "period1": 0,
-        "period2": int(datetime.now().timestamp()),
+        "period1": period1,
+        "period2": period2,
         "interval": "1d",
         "events": "history",
     })
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?{params}"
-    payload = json.loads(fetch_text(url))
+    return f"/v8/finance/chart/{symbol}?{params}"
+
+
+def parse_yahoo_chart(payload: Dict[str, object]) -> List[Bar]:
     result = payload.get("chart", {}).get("result") or []
     if not result:
-        raise RuntimeError(f"No Yahoo data for {symbol}")
+        return []
     timestamps = result[0].get("timestamp") or []
     closes = result[0].get("indicators", {}).get("quote", [{}])[0].get("close") or []
     bars = []
@@ -100,14 +144,60 @@ def fetch_yahoo(symbol: str) -> List[Bar]:
     return bars
 
 
+def fetch_yahoo_window(symbol: str, period1: int, period2: int) -> List[Bar]:
+    path = yahoo_url(symbol, period1, period2)
+    last_error = None
+    for host in YAHOO_HOSTS:
+        url = f"https://{host}{path}"
+        for delay in YAHOO_RETRY_DELAYS:
+            if delay:
+                time.sleep(delay)
+            try:
+                return parse_yahoo_chart(json.loads(fetch_text(url)))
+            except HTTPError as exc:
+                last_error = exc
+                if exc.code == 400:
+                    return []
+                if exc.code != 429:
+                    raise
+    raise RuntimeError(f"Yahoo rate limit did not clear for {symbol}") from last_error
+
+
+def fetch_yahoo(symbol: str) -> List[Bar]:
+    bars = []
+    current_year = datetime.now().year
+    for start_year in range(YAHOO_START_YEAR, current_year + 1, YAHOO_CHUNK_YEARS):
+        end_year = min(start_year + YAHOO_CHUNK_YEARS, current_year + 1)
+        period1 = int(datetime(start_year, 1, 1).timestamp())
+        period2 = int(datetime(end_year, 1, 1).timestamp())
+        bars.extend(fetch_yahoo_window(symbol, period1, period2))
+        time.sleep(FETCH_PAUSE_SECONDS)
+
+    unique = {bar.d: bar for bar in bars}
+    if not unique:
+        raise RuntimeError(f"No Yahoo data for {symbol}")
+    return [unique[d] for d in sorted(unique)]
+
+
 def fetch_prices(symbol: str) -> List[Bar]:
-    bars = fetch_stooq(symbol)
-    if bars:
-        return bars
-    bars = fetch_yahoo(symbol)
-    if not bars:
-        raise RuntimeError(f"No data for {symbol}")
-    return bars
+    cached_bars = load_price_cache(symbol)
+    if cached_bars and cache_is_fresh(symbol):
+        return cached_bars
+
+    last_error = None
+    for fetcher in (fetch_yahoo, fetch_stooq):
+        try:
+            bars = fetcher(symbol)
+        except Exception as exc:
+            last_error = exc
+            continue
+        if bars:
+            save_price_cache(symbol, bars)
+            return bars
+
+    if cached_bars:
+        return cached_bars
+    raise RuntimeError(f"No data for {symbol}") from last_error
 
 
 def save_csv(path: Path, rows: List[Dict[str, object]], fieldnames: List[str]) -> None:
@@ -120,7 +210,7 @@ def save_csv(path: Path, rows: List[Dict[str, object]], fieldnames: List[str]) -
                 all_fields.append(key)
                 seen.add(key)
     with path.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=all_fields)
+        writer = csv.DictWriter(f, fieldnames=all_fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -417,10 +507,14 @@ def build_orders(prices: PriceMap, i: int, equity: float, weights: Dict[str, flo
 
 
 def backtest() -> Dict[str, object]:
-    symbols = sorted(set(UNIVERSE + [SAFE_ASSET]))
+    symbols = list(dict.fromkeys(UNIVERSE + [SAFE_ASSET]))
     DATA_DIR.mkdir(exist_ok=True)
     REPORT_DIR.mkdir(exist_ok=True)
-    raw = {sym: fetch_prices(sym) for sym in symbols}
+    raw = {}
+    for index, sym in enumerate(symbols):
+        if index > 0:
+            time.sleep(FETCH_PAUSE_SECONDS)
+        raw[sym] = fetch_prices(sym)
     dates, prices = align_prices(raw)
 
     start_i = 252
