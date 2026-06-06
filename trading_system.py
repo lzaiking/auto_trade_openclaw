@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Simple multi-asset momentum trading system with backtest and order generation.
+"""Simple ETF momentum trading system with backtest and order generation.
 
-Universe: liquid US growth / broad-market names.
+Universe: QQQ, GLD, and SGOV.
 Data source: Stooq daily CSV via HTTP (no API key).
 
 Outputs:
@@ -19,23 +19,27 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
+from urllib.parse import urlencode
+from urllib.request import Request
 from urllib.request import urlopen
 
 START_CAPITAL = 50_000.0
 MAX_DRAWDOWN_TARGET = 0.20
 DATA_DIR = Path("data")
 REPORT_DIR = Path("reports")
-UNIVERSE = [
-    "SPY", "QQQ", "GOOGL", "META", "MSFT", "AMZN", "NVDA", "AVGO", "AAPL", "PLTR",
-]
-SAFE_ASSET = "SHY"  # short treasury ETF proxy for cash-like parking
+REQUEST_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/125.0 Safari/537.36"
+}
+RISK_ASSETS = ["QQQ", "GLD"]
+SAFE_ASSET = "SGOV"  # 0-3 month Treasury ETF proxy for cash-like parking
+UNIVERSE = RISK_ASSETS + [SAFE_ASSET]
 BENCHMARK = "QQQ"
 REBALANCE_EVERY_N_DAYS = 21
-TOP_N = 4
+TOP_N = 1
 STOP_LOSS_VOL_MULTIPLIER = 2.3
 MIN_STOP_LOSS_PCT = 0.10
 MAX_STOP_LOSS_PCT = 0.22
-PARTIAL_REGIME_EXPOSURE = 0.45
 DISABLE_HARD_TAKE_PROFIT = True
 HARD_TAKE_PROFIT_PCT = 0.60
 
@@ -49,7 +53,7 @@ class Bar:
 def fetch_stooq(symbol: str) -> List[Bar]:
     symbol_key = f"{symbol.lower()}.us"
     url = f"https://stooq.com/q/d/l/?s={symbol_key}&i=d"
-    text = urlopen(url, timeout=30).read().decode("utf-8")
+    text = urlopen(Request(url, headers=REQUEST_HEADERS), timeout=30).read().decode("utf-8")
     rows = list(csv.DictReader(text.splitlines()))
     bars: List[Bar] = []
     for row in rows:
@@ -57,6 +61,36 @@ def fetch_stooq(symbol: str) -> List[Bar]:
             bars.append(Bar(datetime.strptime(row["Date"], "%Y-%m-%d").date(), float(row["Close"])))
         except Exception:
             continue
+    return bars
+
+
+def fetch_yahoo(symbol: str) -> List[Bar]:
+    params = urlencode({
+        "period1": 0,
+        "period2": int(datetime.now().timestamp()),
+        "interval": "1d",
+        "events": "history",
+    })
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?{params}"
+    payload = json.loads(urlopen(Request(url, headers=REQUEST_HEADERS), timeout=30).read().decode("utf-8"))
+    result = payload.get("chart", {}).get("result") or []
+    if not result:
+        raise RuntimeError(f"No Yahoo data for {symbol}")
+    timestamps = result[0].get("timestamp") or []
+    closes = result[0].get("indicators", {}).get("quote", [{}])[0].get("close") or []
+    bars = []
+    for ts, close in zip(timestamps, closes):
+        if close is None:
+            continue
+        bars.append(Bar(datetime.fromtimestamp(ts).date(), float(close)))
+    return bars
+
+
+def fetch_prices(symbol: str) -> List[Bar]:
+    bars = fetch_stooq(symbol)
+    if bars:
+        return bars
+    bars = fetch_yahoo(symbol)
     if not bars:
         raise RuntimeError(f"No data for {symbol}")
     return bars
@@ -126,18 +160,6 @@ def score_symbol(sym: str, prices: Dict[str, List[float]], i: int) -> float:
     return (raw / vol) * trend_ok
 
 
-def regime_exposure(prices: Dict[str, List[float]], i: int) -> float:
-    q = prices[BENCHMARK]
-    spy = prices["SPY"]
-    q_above = q[i] > sma(q, 200, i)
-    spy_above = spy[i] > sma(spy, 200, i)
-    if q_above and spy_above:
-        return 1.0
-    if q_above or spy_above:
-        return PARTIAL_REGIME_EXPOSURE
-    return 0.0
-
-
 def clamp(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, x))
 
@@ -150,15 +172,9 @@ def dynamic_stop_pct(prices: Dict[str, List[float]], sym: str, i: int) -> float:
 def target_weights(prices: Dict[str, List[float]], i: int, equity: float, peak: float) -> Dict[str, float]:
     weights = {sym: 0.0 for sym in prices.keys()}
     dd = 0.0 if peak <= 0 else 1.0 - equity / peak
-    regime_gross = regime_exposure(prices, i)
-    if regime_gross <= 0:
-        weights[SAFE_ASSET] = 1.0
-        return weights
 
     ranked = []
-    for sym in UNIVERSE:
-        if sym in {"SPY", "QQQ"}:
-            continue
+    for sym in RISK_ASSETS:
         ranked.append((score_symbol(sym, prices, i), sym))
     ranked.sort(reverse=True)
     selected = [sym for score, sym in ranked[:TOP_N] if score > 0]
@@ -171,7 +187,7 @@ def target_weights(prices: Dict[str, List[float]], i: int, equity: float, peak: 
         vol = stdev_daily_returns(prices[sym], 20, i) or 0.0001
         inv_vols.append((1.0 / vol, sym))
     total = sum(v for v, _ in inv_vols)
-    gross = regime_gross
+    gross = 1.0
     if dd > 0.10:
         gross *= 0.85
     if dd > 0.15:
@@ -221,7 +237,7 @@ def backtest() -> Dict[str, object]:
     symbols = sorted(set(UNIVERSE + [SAFE_ASSET]))
     DATA_DIR.mkdir(exist_ok=True)
     REPORT_DIR.mkdir(exist_ok=True)
-    raw = {sym: fetch_stooq(sym) for sym in symbols}
+    raw = {sym: fetch_prices(sym) for sym in symbols}
     dates, prices = align_prices(raw)
 
     start_i = 252
@@ -373,17 +389,17 @@ def backtest() -> Dict[str, object]:
         "safe_asset": SAFE_ASSET,
         "logic": {
             "ranking": "21/63/126-day weighted momentum divided by 20-day volatility, only above 200-day SMA",
-            "selection": f"Top {TOP_N} stocks from growth universe",
-            "risk": "Partial regime filter (QQQ/SPY 200-day SMA), inverse volatility sizing, softer drawdown governor, SHY fallback, volatility-adaptive trailing stop-loss",
+            "selection": f"Top {TOP_N} ETF from QQQ/GLD; fallback to SGOV when no ETF has positive trend-adjusted momentum",
+            "risk": "ETF-only universe, inverse volatility sizing when multiple ETFs qualify, softer drawdown governor, SGOV fallback, volatility-adaptive trailing stop-loss",
             "rebalance": f"Every {REBALANCE_EVERY_N_DAYS} trading days",
             "exit_bands": {
                 "stop_loss": f"20-day volatility × {STOP_LOSS_VOL_MULTIPLIER}, clamped to {MIN_STOP_LOSS_PCT:.0%}-{MAX_STOP_LOSS_PCT:.0%}, trailing from post-entry high",
                 "take_profit": "Disabled by default to avoid cutting long trends too early" if DISABLE_HARD_TAKE_PROFIT else f"Fixed {HARD_TAKE_PROFIT_PCT:.0%} hard take-profit from entry price",
             },
-            "regime_exposure": {
-                "risk_on": "100% risk budget when both QQQ and SPY are above 200-day SMA",
-                "mixed": f"{PARTIAL_REGIME_EXPOSURE:.0%} risk budget when only one of QQQ/SPY is above 200-day SMA",
-                "risk_off": "100% SHY when both QQQ and SPY are below 200-day SMA",
+            "assets": {
+                "growth": "QQQ",
+                "gold": "GLD",
+                "defensive": SAFE_ASSET,
             },
         },
     }
