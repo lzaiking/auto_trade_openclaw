@@ -228,20 +228,28 @@ def performance_metrics(equities: List[float], start_capital: float) -> Dict[str
     }
 
 
+def drawdown_curve(equities: List[float]) -> List[float]:
+    peak = equities[0]
+    drawdowns = []
+    for equity in equities:
+        peak = max(peak, equity)
+        drawdowns.append(0.0 if peak <= 0 else 1.0 - equity / peak)
+    return drawdowns
+
+
 def compute_benchmark_metrics(dates: List[date], prices: PriceMap, start_i: int) -> Dict[str, object]:
     benchmark_prices = prices[BENCHMARK][start_i:]
     benchmark_equity = [START_CAPITAL * px / benchmark_prices[0] for px in benchmark_prices]
-    peak = benchmark_equity[0]
+    benchmark_drawdowns = drawdown_curve(benchmark_equity)
     benchmark_curve = []
-    for d, eq in zip(dates[start_i:], benchmark_equity):
-        peak = max(peak, eq)
+    for d, eq, dd in zip(dates[start_i:], benchmark_equity, benchmark_drawdowns):
         benchmark_curve.append({
             "date": d.isoformat(),
             "benchmark_equity": round(eq, 2),
-            "benchmark_drawdown": round(1.0 - eq / peak, 6),
+            "benchmark_drawdown": round(dd, 6),
         })
     metrics = performance_metrics(benchmark_equity, START_CAPITAL)
-    max_dd = max(row["benchmark_drawdown"] for row in benchmark_curve)
+    max_dd = max(benchmark_drawdowns)
     return {
         "curve": benchmark_curve,
         "summary": {
@@ -252,6 +260,50 @@ def compute_benchmark_metrics(dates: List[date], prices: PriceMap, start_i: int)
             "annualized_volatility": round(metrics["annualized_volatility"], 4),
             "sharpe": round(metrics["sharpe"], 4),
             "max_drawdown": round(max_dd, 4),
+        },
+    }
+
+
+def compute_dca_benchmark(dates: List[date], prices: PriceMap, start_i: int) -> Dict[str, object]:
+    benchmark_prices = prices[BENCHMARK]
+    months = sorted({(d.year, d.month) for d in dates[start_i:]})
+    monthly_contribution = START_CAPITAL / len(months)
+    remaining_cash = START_CAPITAL
+    shares = 0.0
+    contributed_months = set()
+    dca_equity = []
+
+    for i in range(start_i, len(dates)):
+        month_key = (dates[i].year, dates[i].month)
+        if month_key not in contributed_months:
+            contribution = min(monthly_contribution, remaining_cash)
+            shares += contribution / benchmark_prices[i]
+            remaining_cash -= contribution
+            contributed_months.add(month_key)
+        dca_equity.append(remaining_cash + shares * benchmark_prices[i])
+
+    dca_drawdowns = drawdown_curve(dca_equity)
+    dca_curve = []
+    for d, eq, dd in zip(dates[start_i:], dca_equity, dca_drawdowns):
+        dca_curve.append({
+            "date": d.isoformat(),
+            "dca_equity": round(eq, 2),
+            "dca_drawdown": round(dd, 6),
+        })
+    metrics = performance_metrics(dca_equity, START_CAPITAL)
+    return {
+        "curve": dca_curve,
+        "summary": {
+            "symbol": BENCHMARK,
+            "method": "monthly_equal_dollar_dca",
+            "total_principal": START_CAPITAL,
+            "monthly_contribution": round(monthly_contribution, 2),
+            "end_equity": round(dca_equity[-1], 2),
+            "total_return": round(metrics["total_return"], 4),
+            "cagr": round(metrics["cagr"], 4),
+            "annualized_volatility": round(metrics["annualized_volatility"], 4),
+            "sharpe": round(metrics["sharpe"], 4),
+            "max_drawdown": round(max(dca_drawdowns), 4),
         },
     }
 
@@ -418,9 +470,12 @@ def backtest() -> Dict[str, object]:
         equity_curve.append(row)
 
     benchmark = compute_benchmark_metrics(dates, prices, start_i)
-    for row, bench_row in zip(equity_curve, benchmark["curve"]):
+    dca_benchmark = compute_dca_benchmark(dates, prices, start_i)
+    for row, bench_row, dca_row in zip(equity_curve, benchmark["curve"], dca_benchmark["curve"]):
         row["benchmark_equity"] = bench_row["benchmark_equity"]
         row["benchmark_drawdown"] = bench_row["benchmark_drawdown"]
+        row["dca_equity"] = dca_row["dca_equity"]
+        row["dca_drawdown"] = dca_row["dca_drawdown"]
     save_csv(REPORT_DIR / "equity_curve.csv", equity_curve, list(equity_curve[0].keys()))
 
     equities = [row["equity"] for row in equity_curve]
@@ -435,6 +490,7 @@ def backtest() -> Dict[str, object]:
         json.dump({"as_of": dates[-1].isoformat(), "starting_capital": START_CAPITAL, "orders": orders}, f, indent=2)
 
     benchmark_summary = benchmark["summary"]
+    dca_summary = dca_benchmark["summary"]
     take_profit_text = "Disabled by default to avoid cutting long trends too early"
     if not DISABLE_HARD_TAKE_PROFIT:
         take_profit_text = f"Fixed {HARD_TAKE_PROFIT_PCT:.0%} hard take-profit from entry price"
@@ -454,6 +510,10 @@ def backtest() -> Dict[str, object]:
         "beats_benchmark_cagr": metrics["cagr"] > benchmark_summary["cagr"],
         "max_drawdown_below_benchmark": max_dd < benchmark_summary["max_drawdown"],
         "benchmark": benchmark_summary,
+        "dca_benchmark": dca_summary,
+        "beats_dca_total_return": metrics["total_return"] > dca_summary["total_return"],
+        "beats_dca_cagr": metrics["cagr"] > dca_summary["cagr"],
+        "max_drawdown_below_dca": max_dd < dca_summary["max_drawdown"],
         "latest_target_weights": {k: round(v, 4) for k, v in latest_weights.items() if v > 0},
         "universe": UNIVERSE,
         "safe_asset": SAFE_ASSET,

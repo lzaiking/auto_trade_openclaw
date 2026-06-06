@@ -6,6 +6,11 @@
   "benchmark": {
     "symbol": "QQQ"
   },
+  "dca_benchmark": {
+    "symbol": "QQQ",
+    "method": "monthly_equal_dollar_dca",
+    "total_principal": 50000.0
+  },
   "universe": [
     "QQQ",
     "GLD",

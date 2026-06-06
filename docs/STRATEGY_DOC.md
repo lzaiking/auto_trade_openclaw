@@ -268,19 +268,24 @@
 - Sharpe Ratio
 - 最大回撤
 
-并同时输出 `QQQ buy-and-hold` 的对比指标，包括：
+并同时输出 `QQQ buy-and-hold` 和 `QQQ monthly DCA` 的对比指标，包括：
 
 - QQQ 总收益率
 - QQQ CAGR
 - QQQ 年化波动率
 - QQQ Sharpe
 - QQQ 最大回撤
+- 每月定投 QQQ 总收益率
+- 每月定投 QQQ CAGR
+- 每月定投 QQQ 最大回撤
 
 同时给出布尔比较结果：
 
 - 是否跑赢 QQQ 总收益
 - 是否跑赢 QQQ CAGR
 - 是否最大回撤低于 QQQ
+- 是否跑赢每月定投 QQQ
+- 是否最大回撤低于每月定投 QQQ
 
 ---
 
@@ -338,7 +343,7 @@
 - `code/trading_system.py`：策略主代码
 - `docs/TRADING_SYSTEM_README.md`：项目级说明
 - `report/backtest_summary.json`：回测摘要
-- `report/equity_curve.csv`：策略与基准净值曲线
+- `report/equity_curve.csv`：策略、QQQ 一次性买入、QQQ 每月定投的净值曲线
 - `report/latest_orders.json`：最新建议订单
 
 ---
