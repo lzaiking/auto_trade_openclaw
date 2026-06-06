@@ -1,0 +1,6 @@
+{
+  "status": "pending_recompute",
+  "reason": "Re-run code/trading_system.py to generate fresh orders for QQQ, GLD, and SGOV.",
+  "starting_capital": 50000.0,
+  "orders": []
+}

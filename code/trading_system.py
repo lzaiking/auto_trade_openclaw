@@ -5,9 +5,9 @@ Universe: QQQ, GLD, and SGOV.
 Data source: Stooq daily CSV via HTTP (no API key).
 
 Outputs:
-- reports/backtest_summary.json
-- reports/equity_curve.csv
-- reports/latest_orders.json
+- report/backtest_summary.json
+- report/equity_curve.csv
+- report/latest_orders.json
 """
 from __future__ import annotations
 
@@ -25,8 +25,9 @@ from urllib.request import urlopen
 
 START_CAPITAL = 50_000.0
 MAX_DRAWDOWN_TARGET = 0.20
-DATA_DIR = Path("data")
-REPORT_DIR = Path("reports")
+BASE_DIR = Path(__file__).resolve().parents[1]
+DATA_DIR = BASE_DIR / "data"
+REPORT_DIR = BASE_DIR / "report"
 REQUEST_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/125.0 Safari/537.36"

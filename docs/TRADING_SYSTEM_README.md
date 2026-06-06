@@ -8,10 +8,10 @@
 
 ## 文件
 
-- `trading_system.py`：主脚本，负责拉取数据、生成信号、回测、输出订单建议
-- `reports/backtest_summary.json`：回测汇总（含 QQQ buy-and-hold 基准对比）
-- `reports/equity_curve.csv`：权益曲线（含策略与 QQQ 基准净值 / 回撤）
-- `reports/latest_orders.json`：最新一期建议订单（含建议止损价 / 止盈价）
+- `code/trading_system.py`：主脚本，负责拉取数据、生成信号、回测、输出订单建议
+- `report/backtest_summary.json`：回测汇总（含 QQQ buy-and-hold 基准对比）
+- `report/equity_curve.csv`：权益曲线（含策略与 QQQ 基准净值 / 回撤）
+- `report/latest_orders.json`：最新一期建议订单（含建议止损价 / 止盈价）
 
 ## 策略逻辑
 
@@ -55,7 +55,7 @@
 ## 运行
 
 ```bash
-python3 trading_system.py
+python3 code/trading_system.py
 ```
 
 ## 备注

@@ -1,6 +1,6 @@
 {
   "status": "pending_recompute",
-  "reason": "The strategy universe was changed to QQQ, GLD, and SGOV. Re-run trading_system.py when the market data providers are available.",
+  "reason": "The strategy universe was changed to QQQ, GLD, and SGOV. Re-run code/trading_system.py when the market data providers are available.",
   "start_capital": 50000.0,
   "max_drawdown_target": 0.2,
   "benchmark": {

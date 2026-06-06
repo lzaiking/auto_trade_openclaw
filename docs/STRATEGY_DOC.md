@@ -240,7 +240,7 @@
 
 系统当前不直接连券商下单，而是输出建议订单到：
 
-- `reports/latest_orders.json`
+- `report/latest_orders.json`
 
 订单内容包括：
 
@@ -335,11 +335,11 @@
 
 ## 相关文件
 
-- `trading_system.py`：策略主代码
-- `TRADING_SYSTEM_README.md`：项目级说明
-- `reports/backtest_summary.json`：回测摘要
-- `reports/equity_curve.csv`：策略与基准净值曲线
-- `reports/latest_orders.json`：最新建议订单
+- `code/trading_system.py`：策略主代码
+- `docs/TRADING_SYSTEM_README.md`：项目级说明
+- `report/backtest_summary.json`：回测摘要
+- `report/equity_curve.csv`：策略与基准净值曲线
+- `report/latest_orders.json`：最新建议订单
 
 ---
 
