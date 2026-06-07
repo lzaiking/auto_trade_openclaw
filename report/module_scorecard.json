@@ -1,0 +1,47 @@
+{
+  "prediction_module": {
+    "overall_auc": 0.4808,
+    "overall_avg_price_auc": 0.4326,
+    "target_auc": 0.6,
+    "passed": false,
+    "leakage_audit_passed": true,
+    "factor_structure_passed": true,
+    "factor_coverage_ready": false,
+    "calibration_ready": false,
+    "missing_factor_features": [
+      "eps_revision_score",
+      "forward_peg_score",
+      "fcf_yield_minus_tbill",
+      "ai_profit_conversion_score",
+      "top_weight_concentration",
+      "breadth_200dma",
+      "crowding_score"
+    ],
+    "diagnosis": "Prediction module is not strong enough for aggressive allocation; key monthly factor coverage is still missing."
+  },
+  "strategy_module": {
+    "annualized_irr": 0.2203,
+    "target_annualized_irr": 0.3,
+    "max_drawdown": 0.2028,
+    "baseline_drawdown": 0.203,
+    "fixed_threshold_annualized_irr": 0.1948,
+    "fixed_threshold_max_drawdown": 0.1808,
+    "best_sweep_annualized_irr": 0.2203,
+    "best_sweep_config": {
+      "strategy_rule": "legacy_signal_strategy"
+    },
+    "passed": false,
+    "diagnosis": "Strategy should remain conservative until prediction AUC improves."
+  },
+  "backtest_module": {
+    "oracle_annualized_irr": 0.7934,
+    "oracle_headroom_to_strategy": 0.5731,
+    "passed": true,
+    "diagnosis": "Backtest is leakage-checked and reports oracle/worst-case scenarios."
+  },
+  "goal_status": {
+    "meets_30pct_annualized_target": false,
+    "keeps_drawdown_not_above_baseline": true,
+    "ready_for_more_aggressive_strategy": false
+  }
+}

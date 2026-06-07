@@ -1,0 +1,7 @@
+strategy_rule,annualized_irr,max_drawdown,end_equity,drawdown_ok,qqq_min_weight,max_gld_weight,max_sgov_weight
+legacy_signal_strategy,0.2203,0.2028,1048631.72,True,,,
+rule_signal_strategy,0.2165,0.2018,1039011.63,True,,,
+score_return_strategy,0.2103,0.1913,1023836.29,True,0.65,0.25,0.35
+score_return_strategy,0.215,0.1947,1035478.43,True,0.75,0.2,0.25
+score_return_strategy,0.2197,0.198,1047143.46,True,0.85,0.15,0.2
+fixed_threshold_strategy,0.1948,0.1808,986209.03,True,,,

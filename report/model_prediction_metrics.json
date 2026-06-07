@@ -1,0 +1,269 @@
+{
+  "estimator": "model_walk_forward",
+  "sample_count": 180,
+  "overall_auc": 0.5281,
+  "overall_avg_price_auc": 0.5848,
+  "mse": 0.00242317,
+  "mae": 0.03234122,
+  "by_asset": {
+    "QQQ": {
+      "sample_count": 60,
+      "auc": 0.4785,
+      "avg_price_auc": 0.4689,
+      "direction_accuracy": 0.4667,
+      "avg_price_direction_accuracy": 0.5167,
+      "mae": 0.05712033
+    },
+    "GLD": {
+      "sample_count": 60,
+      "auc": 0.51,
+      "avg_price_auc": 0.4912,
+      "direction_accuracy": 0.55,
+      "avg_price_direction_accuracy": 0.5833,
+      "mae": 0.03859113
+    },
+    "SGOV": {
+      "sample_count": 60,
+      "auc": 0.6205,
+      "avg_price_auc": 0.7491,
+      "direction_accuracy": 0.55,
+      "avg_price_direction_accuracy": 0.8667,
+      "mae": 0.00131219
+    }
+  },
+  "yearly_auc": {
+    "QQQ": {
+      "2021": 0.5,
+      "2022": 0.3889,
+      "2023": 0.4571,
+      "2024": 0.5625,
+      "2025": 0.3125,
+      "2026": 0.3333
+    },
+    "GLD": {
+      "2021": 0.5,
+      "2022": 0.4857,
+      "2023": 0.6111,
+      "2024": 0.45,
+      "2025": 0.2,
+      "2026": 0.0
+    },
+    "SGOV": {
+      "2021": 0.5,
+      "2022": 0.5556,
+      "2023": 0.4714,
+      "2024": 0.3333,
+      "2025": 0.7222,
+      "2026": 0.6667
+    }
+  },
+  "yearly_avg_price_auc": {
+    "QQQ": {
+      "2021": 0.5,
+      "2022": 0.2344,
+      "2023": 0.4571,
+      "2024": 0.45,
+      "2025": 0.2963,
+      "2026": 0.3333
+    },
+    "GLD": {
+      "2021": 0.5,
+      "2022": 0.3714,
+      "2023": 0.4857,
+      "2024": 0.5312,
+      "2025": 0.4545,
+      "2026": 0.0
+    },
+    "SGOV": {
+      "2021": 0.5,
+      "2022": 0.675,
+      "2023": 0.2727,
+      "2024": null,
+      "2025": null,
+      "2026": null
+    }
+  },
+  "score_calibration": {
+    "QQQ": {
+      "available": true,
+      "lowest_bucket_avg_return": 0.032383,
+      "highest_bucket_avg_return": 0.014218,
+      "high_minus_low_return": -0.018165,
+      "lowest_bucket_avg_price_return": 0.016231,
+      "highest_bucket_avg_price_return": 0.011473,
+      "high_minus_low_avg_price_return": -0.004758,
+      "lowest_bucket_up_rate": 0.5833,
+      "highest_bucket_up_rate": 0.5833,
+      "high_minus_low_up_rate": 0.0,
+      "lowest_bucket_avg_price_up_rate": 0.6667,
+      "highest_bucket_avg_price_up_rate": 0.6667,
+      "high_minus_low_avg_price_up_rate": 0.0,
+      "monotonic_return_buckets": false,
+      "monotonic_avg_price_return_buckets": false
+    },
+    "GLD": {
+      "available": true,
+      "lowest_bucket_avg_return": 0.009665,
+      "highest_bucket_avg_return": 0.013697,
+      "high_minus_low_return": 0.004032,
+      "lowest_bucket_avg_price_return": 0.004095,
+      "highest_bucket_avg_price_return": 0.011118,
+      "high_minus_low_avg_price_return": 0.007023,
+      "lowest_bucket_up_rate": 0.5833,
+      "highest_bucket_up_rate": 0.5,
+      "high_minus_low_up_rate": -0.0833,
+      "lowest_bucket_avg_price_up_rate": 0.5833,
+      "highest_bucket_avg_price_up_rate": 0.5,
+      "high_minus_low_avg_price_up_rate": -0.0833,
+      "monotonic_return_buckets": false,
+      "monotonic_avg_price_return_buckets": false
+    },
+    "SGOV": {
+      "available": true,
+      "lowest_bucket_avg_return": 0.000383,
+      "highest_bucket_avg_return": 0.000474,
+      "high_minus_low_return": 9.1e-05,
+      "lowest_bucket_avg_price_return": 0.000473,
+      "highest_bucket_avg_price_return": 0.001953,
+      "high_minus_low_avg_price_return": 0.00148,
+      "lowest_bucket_up_rate": 0.5,
+      "highest_bucket_up_rate": 0.6667,
+      "high_minus_low_up_rate": 0.1667,
+      "lowest_bucket_avg_price_up_rate": 0.75,
+      "highest_bucket_avg_price_up_rate": 1,
+      "high_minus_low_avg_price_up_rate": 0.25,
+      "monotonic_return_buckets": false,
+      "monotonic_avg_price_return_buckets": true
+    }
+  },
+  "feature_coverage": {
+    "eps_revision_score": {
+      "present_count": 0,
+      "total_count": 180,
+      "coverage": 0.0
+    },
+    "forward_peg_score": {
+      "present_count": 0,
+      "total_count": 180,
+      "coverage": 0.0
+    },
+    "fcf_yield_minus_tbill": {
+      "present_count": 0,
+      "total_count": 180,
+      "coverage": 0.0
+    },
+    "ai_profit_conversion_score": {
+      "present_count": 0,
+      "total_count": 180,
+      "coverage": 0.0
+    },
+    "top_weight_concentration": {
+      "present_count": 0,
+      "total_count": 180,
+      "coverage": 0.0
+    },
+    "breadth_200dma": {
+      "present_count": 0,
+      "total_count": 180,
+      "coverage": 0.0
+    },
+    "crowding_score": {
+      "present_count": 0,
+      "total_count": 180,
+      "coverage": 0.0
+    },
+    "asset_extension_200dma": {
+      "present_count": 180,
+      "total_count": 180,
+      "coverage": 1.0
+    },
+    "asset_rsi_14": {
+      "present_count": 180,
+      "total_count": 180,
+      "coverage": 1.0
+    },
+    "asset_return_63d": {
+      "present_count": 180,
+      "total_count": 180,
+      "coverage": 1.0
+    }
+  },
+  "single_feature_auc": {
+    "eps_revision_score": {
+      "auc": null,
+      "coverage": 0.0,
+      "direction": "insufficient_data"
+    },
+    "forward_peg_score": {
+      "auc": null,
+      "coverage": 0.0,
+      "direction": "insufficient_data"
+    },
+    "fcf_yield_minus_tbill": {
+      "auc": null,
+      "coverage": 0.0,
+      "direction": "insufficient_data"
+    },
+    "ai_profit_conversion_score": {
+      "auc": null,
+      "coverage": 0.0,
+      "direction": "insufficient_data"
+    },
+    "top_weight_concentration": {
+      "auc": null,
+      "coverage": 0.0,
+      "direction": "insufficient_data"
+    },
+    "breadth_200dma": {
+      "auc": null,
+      "coverage": 0.0,
+      "direction": "insufficient_data"
+    },
+    "crowding_score": {
+      "auc": null,
+      "coverage": 0.0,
+      "direction": "insufficient_data"
+    },
+    "asset_extension_200dma": {
+      "auc": 0.5096,
+      "coverage": 1.0,
+      "direction": "higher_is_better"
+    },
+    "asset_rsi_14": {
+      "auc": 0.5706,
+      "coverage": 1.0,
+      "direction": "lower_is_better"
+    },
+    "asset_return_63d": {
+      "auc": 0.5428,
+      "coverage": 1.0,
+      "direction": "higher_is_better"
+    }
+  },
+  "latest_predictions": {
+    "QQQ": {
+      "date": "2026-06-01",
+      "score": 0.522131,
+      "predicted_1m_return": 0.004426,
+      "actual_forward_1m_return": null,
+      "actual_forward_1m_avg_return": null,
+      "sample_size": 59
+    },
+    "GLD": {
+      "date": "2026-06-01",
+      "score": 0.798846,
+      "predicted_1m_return": 0.059769,
+      "actual_forward_1m_return": null,
+      "actual_forward_1m_avg_return": null,
+      "sample_size": 59
+    },
+    "SGOV": {
+      "date": "2026-06-01",
+      "score": 0.621581,
+      "predicted_1m_return": 0.000598,
+      "actual_forward_1m_return": null,
+      "actual_forward_1m_avg_return": null,
+      "sample_size": 59
+    }
+  }
+}

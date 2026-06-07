@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "checked_predictions": 183,
+  "violations": [],
+  "warmup_predictions_with_neutral_model": 183,
+  "rule": "A training observation is allowed only when its forward-label end index is strictly less than the current prediction index."
+}

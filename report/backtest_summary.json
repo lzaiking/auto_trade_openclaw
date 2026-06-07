@@ -1,64 +1,845 @@
 {
   "as_of": "2026-06-05",
-  "start_capital": 50000.0,
-  "end_equity": 79612.13,
-  "total_return": 0.5922,
-  "cagr": 0.0975,
-  "annualized_volatility": 0.1598,
-  "sharpe": 0.6631,
-  "max_drawdown": 0.1982,
-  "max_drawdown_target": 0.2,
-  "meets_drawdown_target": true,
-  "beats_benchmark_total_return": false,
-  "beats_benchmark_cagr": false,
-  "max_drawdown_below_benchmark": true,
-  "benchmark": {
-    "symbol": "QQQ",
-    "end_equity": 105922.12,
-    "total_return": 1.1184,
-    "cagr": 0.162,
-    "annualized_volatility": 0.2244,
-    "sharpe": 0.7817,
-    "max_drawdown": 0.3562
+  "monthly_contribution": 10000.0,
+  "target_annualized_irr": 0.3,
+  "strategy": {
+    "method": "legacy_signal_strategy",
+    "strategy_config": {},
+    "latest_target_weights": {
+      "QQQ": 0.9,
+      "GLD": 0.1
+    },
+    "monthly_contribution": 10000.0,
+    "total_principal": 610000.0,
+    "end_equity": 1048631.72,
+    "total_return_on_principal": 0.7191,
+    "annualized_irr": 0.2203,
+    "annualized_volatility": 0.5831,
+    "sharpe": 1.8202,
+    "max_drawdown": 0.2028
+  },
+  "model_score_return_scenario": {
+    "method": "score_return_strategy",
+    "strategy_config": {},
+    "latest_target_weights": {
+      "QQQ": 0.8595,
+      "GLD": 0.1289,
+      "SGOV": 0.0115
+    },
+    "monthly_contribution": 10000.0,
+    "total_principal": 610000.0,
+    "end_equity": 988510.98,
+    "total_return_on_principal": 0.6205,
+    "annualized_irr": 0.1958,
+    "annualized_volatility": 0.577,
+    "sharpe": 1.8119,
+    "max_drawdown": 0.1903
+  },
+  "fixed_threshold_scenario": {
+    "method": "fixed_threshold_strategy",
+    "strategy_config": {},
+    "latest_target_weights": {
+      "QQQ": 0.7,
+      "GLD": 0.3
+    },
+    "monthly_contribution": 10000.0,
+    "total_principal": 610000.0,
+    "end_equity": 986209.03,
+    "total_return_on_principal": 0.6167,
+    "annualized_irr": 0.1948,
+    "annualized_volatility": 0.5768,
+    "sharpe": 1.8113,
+    "max_drawdown": 0.1808
   },
   "dca_benchmark": {
     "symbol": "QQQ",
-    "method": "monthly_equal_dollar_dca",
-    "total_principal": 50000.0,
-    "monthly_contribution": 819.67,
-    "end_equity": 87268.96,
-    "total_return": 0.7454,
-    "cagr": 0.1178,
-    "annualized_volatility": 0.1244,
-    "sharpe": 0.9587,
-    "max_drawdown": 0.1879
+    "method": "monthly_qqq_dca",
+    "monthly_contribution": 10000.0,
+    "total_principal": 610000.0,
+    "end_equity": 1064681.31,
+    "total_return_on_principal": 0.7454,
+    "annualized_irr": 0.2266,
+    "annualized_volatility": 0.5839,
+    "sharpe": 1.8239,
+    "max_drawdown": 0.203
   },
+  "oracle_scenario": {
+    "method": "oracle",
+    "strategy_config": {},
+    "latest_target_weights": {
+      "QQQ": 1.0
+    },
+    "monthly_contribution": 10000.0,
+    "total_principal": 610000.0,
+    "end_equity": 3723537.5,
+    "total_return_on_principal": 5.1042,
+    "annualized_irr": 0.7934,
+    "annualized_volatility": 0.5492,
+    "sharpe": 2.3629,
+    "max_drawdown": 0.1354
+  },
+  "worst_case_scenario": {
+    "method": "worst_case",
+    "strategy_config": {},
+    "latest_target_weights": {
+      "QQQ": 1.0
+    },
+    "monthly_contribution": 10000.0,
+    "total_principal": 610000.0,
+    "end_equity": 335222.03,
+    "total_return_on_principal": -0.4505,
+    "annualized_irr": -0.2361,
+    "annualized_volatility": 0.6462,
+    "sharpe": 1.3216,
+    "max_drawdown": 0.1848
+  },
+  "strategy_sweep": {
+    "best": {
+      "strategy_rule": "legacy_signal_strategy",
+      "annualized_irr": 0.2203,
+      "max_drawdown": 0.2028,
+      "end_equity": 1048631.72,
+      "drawdown_ok": true
+    },
+    "feasible_count": 6,
+    "total_count": 6,
+    "note": "Sweep compares rule-signal, score-return allocation variants, and the fixed-threshold rule; it is diagnostics, not prediction training."
+  },
+  "risk_controls": {
+    "portfolio_stop_loss_pct": 0.203,
+    "warning_drawdown_pct": 0.1522,
+    "de_risk_drawdown_pct": 0.1827,
+    "rule": "If portfolio drawdown reaches warning line, cap non-QQQ tilt at 5%; if it reaches de-risk line, keep at least 30% in SGOV; if it reaches stop line, pause new GLD/QQQ tilts and direct new contribution to SGOV until next monthly review.",
+    "annualized_irr_gap_to_30pct": 0.0797,
+    "oracle_annualized_headroom": 0.5731,
+    "worst_case_end_equity_loss_vs_strategy": 713409.69,
+    "interpretation": "Oracle headroom shows the asset-rotation opportunity is large, but current AUC is too weak; risk lines should stay close to the QQQ DCA drawdown until prediction AUC improves."
+  },
+  "factor_validation": {
+    "path": "/Users/lizai/openclaw/nasdaq-weekly-report-2026-03-23/data/factors/monthly_factors.csv",
+    "passed_structure": true,
+    "row_count": 0,
+    "required_columns": [
+      "date",
+      "eps_revision_score",
+      "forward_peg_score",
+      "fcf_yield_minus_tbill",
+      "ai_profit_conversion_score",
+      "top_weight_concentration",
+      "breadth_200dma",
+      "crowding_score"
+    ],
+    "schema": {
+      "eps_revision_score": {
+        "description": "Monthly EPS revision strength. Higher is more bullish.",
+        "min": -5.0,
+        "max": 5.0,
+        "source_note": "Use point-in-time analyst estimate data available before the monthly decision date."
+      },
+      "forward_peg_score": {
+        "description": "Forward PEG attractiveness score. Higher is more bullish.",
+        "min": -5.0,
+        "max": 5.0,
+        "source_note": "Normalize from point-in-time valuation data available before the monthly decision date."
+      },
+      "fcf_yield_minus_tbill": {
+        "description": "Free-cash-flow yield minus short Treasury yield, expressed as a decimal spread.",
+        "min": -1.0,
+        "max": 1.0,
+        "source_note": "Use point-in-time index FCF yield and short Treasury yield available before the monthly decision date."
+      },
+      "ai_profit_conversion_score": {
+        "description": "AI capex to profit conversion score. Higher is more bullish.",
+        "min": -5.0,
+        "max": 5.0,
+        "source_note": "Use data available before the monthly decision date."
+      },
+      "top_weight_concentration": {
+        "description": "Top constituent weight concentration, decimal 0-1.",
+        "min": 0.0,
+        "max": 1.0,
+        "source_note": "Use index composition available before the monthly decision date."
+      },
+      "breadth_200dma": {
+        "description": "Share of index constituents above 200-day moving average, decimal 0-1.",
+        "min": 0.0,
+        "max": 1.0,
+        "source_note": "Use constituent prices available before the monthly decision date."
+      },
+      "crowding_score": {
+        "description": "Crowding/positioning heat score. Higher means more crowded unless normalized otherwise.",
+        "min": -5.0,
+        "max": 5.0,
+        "source_note": "Use point-in-time positioning or flow data available before the monthly decision date."
+      }
+    },
+    "feature_stats": {
+      "eps_revision_score": {
+        "present_count": 0,
+        "coverage": 0.0,
+        "min": null,
+        "max": null,
+        "out_of_range_count": 0
+      },
+      "forward_peg_score": {
+        "present_count": 0,
+        "coverage": 0.0,
+        "min": null,
+        "max": null,
+        "out_of_range_count": 0
+      },
+      "fcf_yield_minus_tbill": {
+        "present_count": 0,
+        "coverage": 0.0,
+        "min": null,
+        "max": null,
+        "out_of_range_count": 0
+      },
+      "ai_profit_conversion_score": {
+        "present_count": 0,
+        "coverage": 0.0,
+        "min": null,
+        "max": null,
+        "out_of_range_count": 0
+      },
+      "top_weight_concentration": {
+        "present_count": 0,
+        "coverage": 0.0,
+        "min": null,
+        "max": null,
+        "out_of_range_count": 0
+      },
+      "breadth_200dma": {
+        "present_count": 0,
+        "coverage": 0.0,
+        "min": null,
+        "max": null,
+        "out_of_range_count": 0
+      },
+      "crowding_score": {
+        "present_count": 0,
+        "coverage": 0.0,
+        "min": null,
+        "max": null,
+        "out_of_range_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      "monthly_factors.csv has only a header; fundamental factor coverage is 0%."
+    ],
+    "point_in_time_rule": "Each row must contain only data observable before that month's strategy decision date. Do not revise historical rows with later analyst estimates, index composition, or positioning data."
+  },
+  "prediction_metrics": {
+    "estimator": "rule_signal",
+    "sample_count": 180,
+    "overall_auc": 0.4808,
+    "overall_avg_price_auc": 0.4326,
+    "mse": 0.00202441,
+    "mae": 0.03064537,
+    "by_asset": {
+      "QQQ": {
+        "sample_count": 60,
+        "auc": 0.5486,
+        "avg_price_auc": 0.4774,
+        "direction_accuracy": 0.5667,
+        "avg_price_direction_accuracy": 0.65,
+        "mae": 0.04931809
+      },
+      "GLD": {
+        "sample_count": 60,
+        "auc": 0.4853,
+        "avg_price_auc": 0.423,
+        "direction_accuracy": 0.4667,
+        "avg_price_direction_accuracy": 0.4333,
+        "mae": 0.03928074
+      },
+      "SGOV": {
+        "sample_count": 60,
+        "auc": 0.4044,
+        "avg_price_auc": 0.2945,
+        "direction_accuracy": 0.5667,
+        "avg_price_direction_accuracy": 0.9167,
+        "mae": 0.00333727
+      }
+    },
+    "yearly_auc": {
+      "QQQ": {
+        "2021": 0.9,
+        "2022": 0.4815,
+        "2023": 0.5429,
+        "2024": 0.75,
+        "2025": 0.5312,
+        "2026": 0.5
+      },
+      "GLD": {
+        "2021": 1.0,
+        "2022": 0.6286,
+        "2023": 0.6389,
+        "2024": 0.7,
+        "2025": 0.45,
+        "2026": 0.3333
+      },
+      "SGOV": {
+        "2021": 0.0,
+        "2022": 0.5278,
+        "2023": 0.2,
+        "2024": 0.6667,
+        "2025": 0.25,
+        "2026": 0.1667
+      }
+    },
+    "yearly_avg_price_auc": {
+      "QQQ": {
+        "2021": 0.6667,
+        "2022": 0.3438,
+        "2023": 0.5429,
+        "2024": 0.7,
+        "2025": 0.4074,
+        "2026": 0.5
+      },
+      "GLD": {
+        "2021": 0.9167,
+        "2022": 0.3714,
+        "2023": 0.6571,
+        "2024": 0.4062,
+        "2025": 0.5455,
+        "2026": 0.3333
+      },
+      "SGOV": {
+        "2021": 0.1,
+        "2022": 0.25,
+        "2023": 0.0909,
+        "2024": null,
+        "2025": null,
+        "2026": null
+      }
+    },
+    "score_calibration": {
+      "QQQ": {
+        "available": true,
+        "lowest_bucket_avg_return": 0.012335,
+        "highest_bucket_avg_return": 0.031249,
+        "high_minus_low_return": 0.018914,
+        "lowest_bucket_avg_price_return": 0.006427,
+        "highest_bucket_avg_price_return": 0.013522,
+        "high_minus_low_avg_price_return": 0.007095,
+        "lowest_bucket_up_rate": 0.5,
+        "highest_bucket_up_rate": 0.5833,
+        "high_minus_low_up_rate": 0.0833,
+        "lowest_bucket_avg_price_up_rate": 0.6667,
+        "highest_bucket_avg_price_up_rate": 0.5833,
+        "high_minus_low_avg_price_up_rate": -0.0834,
+        "monotonic_return_buckets": false,
+        "monotonic_avg_price_return_buckets": false
+      },
+      "GLD": {
+        "available": true,
+        "lowest_bucket_avg_return": 0.022046,
+        "highest_bucket_avg_return": 0.02787,
+        "high_minus_low_return": 0.005824,
+        "lowest_bucket_avg_price_return": 0.018887,
+        "highest_bucket_avg_price_return": 0.013095,
+        "high_minus_low_avg_price_return": -0.005792,
+        "lowest_bucket_up_rate": 0.6667,
+        "highest_bucket_up_rate": 0.75,
+        "high_minus_low_up_rate": 0.0833,
+        "lowest_bucket_avg_price_up_rate": 0.6667,
+        "highest_bucket_avg_price_up_rate": 0.6667,
+        "high_minus_low_avg_price_up_rate": 0.0,
+        "monotonic_return_buckets": false,
+        "monotonic_avg_price_return_buckets": false
+      },
+      "SGOV": {
+        "available": true,
+        "lowest_bucket_avg_return": 0.001022,
+        "highest_bucket_avg_return": 0.0,
+        "high_minus_low_return": -0.001022,
+        "lowest_bucket_avg_price_return": 0.001674,
+        "highest_bucket_avg_price_return": 0.001174,
+        "high_minus_low_avg_price_return": -0.0005,
+        "lowest_bucket_up_rate": 0.6667,
+        "highest_bucket_up_rate": 0.4167,
+        "high_minus_low_up_rate": -0.25,
+        "lowest_bucket_avg_price_up_rate": 1,
+        "highest_bucket_avg_price_up_rate": 0.8333,
+        "high_minus_low_avg_price_up_rate": -0.1667,
+        "monotonic_return_buckets": false,
+        "monotonic_avg_price_return_buckets": false
+      }
+    },
+    "feature_coverage": {
+      "eps_revision_score": {
+        "present_count": 0,
+        "total_count": 180,
+        "coverage": 0.0
+      },
+      "forward_peg_score": {
+        "present_count": 0,
+        "total_count": 180,
+        "coverage": 0.0
+      },
+      "fcf_yield_minus_tbill": {
+        "present_count": 0,
+        "total_count": 180,
+        "coverage": 0.0
+      },
+      "ai_profit_conversion_score": {
+        "present_count": 0,
+        "total_count": 180,
+        "coverage": 0.0
+      },
+      "top_weight_concentration": {
+        "present_count": 0,
+        "total_count": 180,
+        "coverage": 0.0
+      },
+      "breadth_200dma": {
+        "present_count": 0,
+        "total_count": 180,
+        "coverage": 0.0
+      },
+      "crowding_score": {
+        "present_count": 0,
+        "total_count": 180,
+        "coverage": 0.0
+      },
+      "asset_extension_200dma": {
+        "present_count": 180,
+        "total_count": 180,
+        "coverage": 1.0
+      },
+      "asset_rsi_14": {
+        "present_count": 180,
+        "total_count": 180,
+        "coverage": 1.0
+      },
+      "asset_return_63d": {
+        "present_count": 180,
+        "total_count": 180,
+        "coverage": 1.0
+      }
+    },
+    "single_feature_auc": {
+      "eps_revision_score": {
+        "auc": null,
+        "coverage": 0.0,
+        "direction": "insufficient_data"
+      },
+      "forward_peg_score": {
+        "auc": null,
+        "coverage": 0.0,
+        "direction": "insufficient_data"
+      },
+      "fcf_yield_minus_tbill": {
+        "auc": null,
+        "coverage": 0.0,
+        "direction": "insufficient_data"
+      },
+      "ai_profit_conversion_score": {
+        "auc": null,
+        "coverage": 0.0,
+        "direction": "insufficient_data"
+      },
+      "top_weight_concentration": {
+        "auc": null,
+        "coverage": 0.0,
+        "direction": "insufficient_data"
+      },
+      "breadth_200dma": {
+        "auc": null,
+        "coverage": 0.0,
+        "direction": "insufficient_data"
+      },
+      "crowding_score": {
+        "auc": null,
+        "coverage": 0.0,
+        "direction": "insufficient_data"
+      },
+      "asset_extension_200dma": {
+        "auc": 0.5096,
+        "coverage": 1.0,
+        "direction": "higher_is_better"
+      },
+      "asset_rsi_14": {
+        "auc": 0.5706,
+        "coverage": 1.0,
+        "direction": "lower_is_better"
+      },
+      "asset_return_63d": {
+        "auc": 0.5428,
+        "coverage": 1.0,
+        "direction": "higher_is_better"
+      }
+    },
+    "latest_predictions": {
+      "QQQ": {
+        "date": "2026-06-01",
+        "score": 0.580365,
+        "predicted_1m_return": 0.008037,
+        "actual_forward_1m_return": null,
+        "actual_forward_1m_avg_return": null,
+        "sample_size": 0
+      },
+      "GLD": {
+        "date": "2026-06-01",
+        "score": 0.568762,
+        "predicted_1m_return": 0.006876,
+        "actual_forward_1m_return": null,
+        "actual_forward_1m_avg_return": null,
+        "sample_size": 0
+      },
+      "SGOV": {
+        "date": "2026-06-01",
+        "score": 0.540598,
+        "predicted_1m_return": 0.00406,
+        "actual_forward_1m_return": null,
+        "actual_forward_1m_avg_return": null,
+        "sample_size": 0
+      }
+    },
+    "model_benchmark": {
+      "estimator": "model_walk_forward",
+      "sample_count": 180,
+      "overall_auc": 0.5281,
+      "overall_avg_price_auc": 0.5848,
+      "mse": 0.00242317,
+      "mae": 0.03234122,
+      "by_asset": {
+        "QQQ": {
+          "sample_count": 60,
+          "auc": 0.4785,
+          "avg_price_auc": 0.4689,
+          "direction_accuracy": 0.4667,
+          "avg_price_direction_accuracy": 0.5167,
+          "mae": 0.05712033
+        },
+        "GLD": {
+          "sample_count": 60,
+          "auc": 0.51,
+          "avg_price_auc": 0.4912,
+          "direction_accuracy": 0.55,
+          "avg_price_direction_accuracy": 0.5833,
+          "mae": 0.03859113
+        },
+        "SGOV": {
+          "sample_count": 60,
+          "auc": 0.6205,
+          "avg_price_auc": 0.7491,
+          "direction_accuracy": 0.55,
+          "avg_price_direction_accuracy": 0.8667,
+          "mae": 0.00131219
+        }
+      },
+      "yearly_auc": {
+        "QQQ": {
+          "2021": 0.5,
+          "2022": 0.3889,
+          "2023": 0.4571,
+          "2024": 0.5625,
+          "2025": 0.3125,
+          "2026": 0.3333
+        },
+        "GLD": {
+          "2021": 0.5,
+          "2022": 0.4857,
+          "2023": 0.6111,
+          "2024": 0.45,
+          "2025": 0.2,
+          "2026": 0.0
+        },
+        "SGOV": {
+          "2021": 0.5,
+          "2022": 0.5556,
+          "2023": 0.4714,
+          "2024": 0.3333,
+          "2025": 0.7222,
+          "2026": 0.6667
+        }
+      },
+      "yearly_avg_price_auc": {
+        "QQQ": {
+          "2021": 0.5,
+          "2022": 0.2344,
+          "2023": 0.4571,
+          "2024": 0.45,
+          "2025": 0.2963,
+          "2026": 0.3333
+        },
+        "GLD": {
+          "2021": 0.5,
+          "2022": 0.3714,
+          "2023": 0.4857,
+          "2024": 0.5312,
+          "2025": 0.4545,
+          "2026": 0.0
+        },
+        "SGOV": {
+          "2021": 0.5,
+          "2022": 0.675,
+          "2023": 0.2727,
+          "2024": null,
+          "2025": null,
+          "2026": null
+        }
+      },
+      "score_calibration": {
+        "QQQ": {
+          "available": true,
+          "lowest_bucket_avg_return": 0.032383,
+          "highest_bucket_avg_return": 0.014218,
+          "high_minus_low_return": -0.018165,
+          "lowest_bucket_avg_price_return": 0.016231,
+          "highest_bucket_avg_price_return": 0.011473,
+          "high_minus_low_avg_price_return": -0.004758,
+          "lowest_bucket_up_rate": 0.5833,
+          "highest_bucket_up_rate": 0.5833,
+          "high_minus_low_up_rate": 0.0,
+          "lowest_bucket_avg_price_up_rate": 0.6667,
+          "highest_bucket_avg_price_up_rate": 0.6667,
+          "high_minus_low_avg_price_up_rate": 0.0,
+          "monotonic_return_buckets": false,
+          "monotonic_avg_price_return_buckets": false
+        },
+        "GLD": {
+          "available": true,
+          "lowest_bucket_avg_return": 0.009665,
+          "highest_bucket_avg_return": 0.013697,
+          "high_minus_low_return": 0.004032,
+          "lowest_bucket_avg_price_return": 0.004095,
+          "highest_bucket_avg_price_return": 0.011118,
+          "high_minus_low_avg_price_return": 0.007023,
+          "lowest_bucket_up_rate": 0.5833,
+          "highest_bucket_up_rate": 0.5,
+          "high_minus_low_up_rate": -0.0833,
+          "lowest_bucket_avg_price_up_rate": 0.5833,
+          "highest_bucket_avg_price_up_rate": 0.5,
+          "high_minus_low_avg_price_up_rate": -0.0833,
+          "monotonic_return_buckets": false,
+          "monotonic_avg_price_return_buckets": false
+        },
+        "SGOV": {
+          "available": true,
+          "lowest_bucket_avg_return": 0.000383,
+          "highest_bucket_avg_return": 0.000474,
+          "high_minus_low_return": 9.1e-05,
+          "lowest_bucket_avg_price_return": 0.000473,
+          "highest_bucket_avg_price_return": 0.001953,
+          "high_minus_low_avg_price_return": 0.00148,
+          "lowest_bucket_up_rate": 0.5,
+          "highest_bucket_up_rate": 0.6667,
+          "high_minus_low_up_rate": 0.1667,
+          "lowest_bucket_avg_price_up_rate": 0.75,
+          "highest_bucket_avg_price_up_rate": 1,
+          "high_minus_low_avg_price_up_rate": 0.25,
+          "monotonic_return_buckets": false,
+          "monotonic_avg_price_return_buckets": true
+        }
+      },
+      "feature_coverage": {
+        "eps_revision_score": {
+          "present_count": 0,
+          "total_count": 180,
+          "coverage": 0.0
+        },
+        "forward_peg_score": {
+          "present_count": 0,
+          "total_count": 180,
+          "coverage": 0.0
+        },
+        "fcf_yield_minus_tbill": {
+          "present_count": 0,
+          "total_count": 180,
+          "coverage": 0.0
+        },
+        "ai_profit_conversion_score": {
+          "present_count": 0,
+          "total_count": 180,
+          "coverage": 0.0
+        },
+        "top_weight_concentration": {
+          "present_count": 0,
+          "total_count": 180,
+          "coverage": 0.0
+        },
+        "breadth_200dma": {
+          "present_count": 0,
+          "total_count": 180,
+          "coverage": 0.0
+        },
+        "crowding_score": {
+          "present_count": 0,
+          "total_count": 180,
+          "coverage": 0.0
+        },
+        "asset_extension_200dma": {
+          "present_count": 180,
+          "total_count": 180,
+          "coverage": 1.0
+        },
+        "asset_rsi_14": {
+          "present_count": 180,
+          "total_count": 180,
+          "coverage": 1.0
+        },
+        "asset_return_63d": {
+          "present_count": 180,
+          "total_count": 180,
+          "coverage": 1.0
+        }
+      },
+      "single_feature_auc": {
+        "eps_revision_score": {
+          "auc": null,
+          "coverage": 0.0,
+          "direction": "insufficient_data"
+        },
+        "forward_peg_score": {
+          "auc": null,
+          "coverage": 0.0,
+          "direction": "insufficient_data"
+        },
+        "fcf_yield_minus_tbill": {
+          "auc": null,
+          "coverage": 0.0,
+          "direction": "insufficient_data"
+        },
+        "ai_profit_conversion_score": {
+          "auc": null,
+          "coverage": 0.0,
+          "direction": "insufficient_data"
+        },
+        "top_weight_concentration": {
+          "auc": null,
+          "coverage": 0.0,
+          "direction": "insufficient_data"
+        },
+        "breadth_200dma": {
+          "auc": null,
+          "coverage": 0.0,
+          "direction": "insufficient_data"
+        },
+        "crowding_score": {
+          "auc": null,
+          "coverage": 0.0,
+          "direction": "insufficient_data"
+        },
+        "asset_extension_200dma": {
+          "auc": 0.5096,
+          "coverage": 1.0,
+          "direction": "higher_is_better"
+        },
+        "asset_rsi_14": {
+          "auc": 0.5706,
+          "coverage": 1.0,
+          "direction": "lower_is_better"
+        },
+        "asset_return_63d": {
+          "auc": 0.5428,
+          "coverage": 1.0,
+          "direction": "higher_is_better"
+        }
+      },
+      "latest_predictions": {
+        "QQQ": {
+          "date": "2026-06-01",
+          "score": 0.522131,
+          "predicted_1m_return": 0.004426,
+          "actual_forward_1m_return": null,
+          "actual_forward_1m_avg_return": null,
+          "sample_size": 59
+        },
+        "GLD": {
+          "date": "2026-06-01",
+          "score": 0.798846,
+          "predicted_1m_return": 0.059769,
+          "actual_forward_1m_return": null,
+          "actual_forward_1m_avg_return": null,
+          "sample_size": 59
+        },
+        "SGOV": {
+          "date": "2026-06-01",
+          "score": 0.621581,
+          "predicted_1m_return": 0.000598,
+          "actual_forward_1m_return": null,
+          "actual_forward_1m_avg_return": null,
+          "sample_size": 59
+        }
+      }
+    }
+  },
+  "leakage_audit": {
+    "passed": true,
+    "checked_predictions": 183,
+    "violations": [],
+    "warmup_predictions_with_neutral_model": 183,
+    "rule": "A training observation is allowed only when its forward-label end index is strictly less than the current prediction index."
+  },
+  "module_scorecard": {
+    "prediction_module": {
+      "overall_auc": 0.4808,
+      "overall_avg_price_auc": 0.4326,
+      "target_auc": 0.6,
+      "passed": false,
+      "leakage_audit_passed": true,
+      "factor_structure_passed": true,
+      "factor_coverage_ready": false,
+      "calibration_ready": false,
+      "missing_factor_features": [
+        "eps_revision_score",
+        "forward_peg_score",
+        "fcf_yield_minus_tbill",
+        "ai_profit_conversion_score",
+        "top_weight_concentration",
+        "breadth_200dma",
+        "crowding_score"
+      ],
+      "diagnosis": "Prediction module is not strong enough for aggressive allocation; key monthly factor coverage is still missing."
+    },
+    "strategy_module": {
+      "annualized_irr": 0.2203,
+      "target_annualized_irr": 0.3,
+      "max_drawdown": 0.2028,
+      "baseline_drawdown": 0.203,
+      "fixed_threshold_annualized_irr": 0.1948,
+      "fixed_threshold_max_drawdown": 0.1808,
+      "best_sweep_annualized_irr": 0.2203,
+      "best_sweep_config": {
+        "strategy_rule": "legacy_signal_strategy"
+      },
+      "passed": false,
+      "diagnosis": "Strategy should remain conservative until prediction AUC improves."
+    },
+    "backtest_module": {
+      "oracle_annualized_irr": 0.7934,
+      "oracle_headroom_to_strategy": 0.5731,
+      "passed": true,
+      "diagnosis": "Backtest is leakage-checked and reports oracle/worst-case scenarios."
+    },
+    "goal_status": {
+      "meets_30pct_annualized_target": false,
+      "keeps_drawdown_not_above_baseline": true,
+      "ready_for_more_aggressive_strategy": false
+    }
+  },
+  "beats_dca_annualized_irr": false,
   "beats_dca_total_return": false,
-  "beats_dca_cagr": false,
-  "max_drawdown_below_dca": false,
-  "latest_target_weights": {
-    "QQQ": 0.153,
-    "SGOV": 0.847
-  },
+  "max_drawdown_below_dca": true,
+  "meets_drawdown_target": true,
+  "meets_30pct_annualized_target": false,
   "universe": [
     "QQQ",
     "GLD",
     "SGOV"
   ],
-  "safe_asset": "SGOV",
+  "leakage_control": {
+    "label": "Each label uses a future 30-calendar-day window mapped to actual trading days, and is used only for training later months.",
+    "walk_forward": "For each date and asset, the model trains only on earlier observations for that asset.",
+    "strategy": "Strategy consumes only current-month predicted scores and expected returns."
+  },
   "logic": {
-    "ranking": "21/63/126-day weighted momentum divided by 20-day volatility, only above 200-day SMA",
-    "selection": "Top 1 ETF from QQQ/GLD; fallback to SGOV when no ETF qualifies",
-    "risk": "ETF-only universe, drawdown governor, SGOV fallback, volatility-adaptive trailing stop-loss",
-    "rebalance": "Every 21 trading days",
-    "exit_bands": {
-      "stop_loss": "20-day volatility x 2.3, clamped to 10%-22%, trailing from post-entry high",
-      "take_profit": "Disabled by default to avoid cutting long trends too early"
-    },
-    "assets": {
-      "growth": "QQQ",
-      "gold": "GLD",
-      "defensive": "SGOV"
-    }
+    "module_1_prediction": "Prediction module supports pluggable estimators: rule_signal is the main estimator, model_walk_forward is retained as a model benchmark.",
+    "module_2_strategy": "Main strategy uses legacy QQQ score thresholds; model score-return allocation is reported as a scenario, not the default strategy.",
+    "module_3_backtest": "Reports compare strategy vs QQQ DCA plus oracle and worst-case scenarios."
   }
 }
