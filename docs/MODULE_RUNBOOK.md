@@ -3,6 +3,7 @@
 ## 目录职责
 
 - `code/market_data.py`：下载、缓存并对齐 `QQQ / GLD / SGOV` 日线价格，计算均线、RSI、涨幅等基础指标。
+- `code/build_monthly_factors.py`：把本地价格缓存、FRED T-bill 利率和未来 30 自然日后验 label 生成到 `monthly_factors.csv`。
 - `code/factor_validation.py`：检查 `data/factors/monthly_factors.csv` 的字段、取值范围和覆盖率。
 - `code/prediction_module.py`：预测模块。先构造月度样本，再通过可插拔预估策略输出 `score`、`predicted_1m_return` 和后验评估。
 - `code/strategy_module.py`：交易策略模块。只读取预测模块结果，按策略规则生成目标仓位并回测。
@@ -16,12 +17,15 @@
 - `rule_signal`：规则预估策略，直接用 QQQ/GLD/SGOV 的 200 日均线偏离、14 日 RSI、63 日涨幅生成分数。当前主交易策略默认使用这套预估。
 - `model_walk_forward`：线性模型预估策略，保留 walk-forward 训练逻辑，用作模型对照和后续扩展。
 
+`model_walk_forward` 会优先使用 `sklearn.linear_model.RidgeCV` 拟合标准化后的线性模型；如果当前 Python 环境没有 `sklearn`，会自动回退到纯 Python ridge。QQQ 的模型分数固定使用线性预测收益组件，评估重点是 QQQ 未来 30 自然日端点 AUC 和窗口均价 AUC。
+
 主流程会生成：
 
 - `report/factor_predictions.csv`：规则预估明细
 - `report/prediction_metrics.json`：规则预估准确度
 - `report/model_factor_predictions.csv`：模型预估明细
 - `report/model_prediction_metrics.json`：模型预估准确度
+- `report/model_feature_importance.json`：模型标准化系数重要度、符号稳定性和常识备注
 
 ## 策略模块
 
@@ -44,16 +48,28 @@
 
 ## 运行命令
 
+重建月度因子表：
+
+```bash
+python3 code/build_monthly_factors.py
+```
+
 完整运行：
 
 ```bash
 python3 code/trading_system.py
 ```
 
+使用带 sklearn 的 conda 环境运行：
+
+```bash
+conda run -n mlpython3.11 python code/trading_system.py
+```
+
 语法检查：
 
 ```bash
-python3 -m py_compile code/trading_system.py code/market_data.py code/prediction_module.py code/strategy_module.py code/backtest_module.py code/factor_validation.py
+python3 -m py_compile code/trading_system.py code/market_data.py code/prediction_module.py code/strategy_module.py code/backtest_module.py code/factor_validation.py code/build_monthly_factors.py
 ```
 
 检查格式空白：
@@ -76,6 +92,15 @@ python3 -c 'import ast, pathlib, sys; missing=[]; [missing.extend([f"{path}:{nod
 - `report/strategy_sweep.csv`：策略参数和规则对照
 - `report/scenario_analysis.csv`：oracle / worst-case 场景
 - `report/module_scorecard.json`：预测、策略、回测三个模块评分
+
+## 月度数据表
+
+`monthly_factors.csv` 当前只保留可复现的公开字段：
+
+- `breadth_200dma`：三个可交易 ETF 中高于自身 200 日均线的比例
+- `tbill_3m_rate`：FRED `DTB3` 3 个月 T-bill 利率，按决策日前最近可用值填充
+
+PE/PB/EPS/FCF yield 等字段需要历史月度点位数据。当前没有可靠免费来源时不硬填，避免未来函数。价格列和 `label_*` 后验列会由脚本自动生成；最近月份的 label 留空是正确状态。
 
 ## 扩展方式
 

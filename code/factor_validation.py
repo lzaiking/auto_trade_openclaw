@@ -11,47 +11,17 @@ from prediction_module import FACTOR_COLUMNS, FACTOR_FEATURES, ensure_factor_tem
 
 
 FACTOR_SCHEMA = {
-    "eps_revision_score": {
-        "description": "Monthly EPS revision strength. Higher is more bullish.",
-        "min": -5.0,
-        "max": 5.0,
-        "source_note": "Use point-in-time analyst estimate data available before the monthly decision date.",
-    },
-    "forward_peg_score": {
-        "description": "Forward PEG attractiveness score. Higher is more bullish.",
-        "min": -5.0,
-        "max": 5.0,
-        "source_note": "Normalize from point-in-time valuation data available before the monthly decision date.",
-    },
-    "fcf_yield_minus_tbill": {
-        "description": "Free-cash-flow yield minus short Treasury yield, expressed as a decimal spread.",
-        "min": -1.0,
-        "max": 1.0,
-        "source_note": "Use point-in-time index FCF yield and short Treasury yield available before the monthly decision date.",
-    },
-    "ai_profit_conversion_score": {
-        "description": "AI capex to profit conversion score. Higher is more bullish.",
-        "min": -5.0,
-        "max": 5.0,
-        "source_note": "Use data available before the monthly decision date.",
-    },
-    "top_weight_concentration": {
-        "description": "Top constituent weight concentration, decimal 0-1.",
-        "min": 0.0,
-        "max": 1.0,
-        "source_note": "Use index composition available before the monthly decision date.",
-    },
     "breadth_200dma": {
-        "description": "Share of index constituents above 200-day moving average, decimal 0-1.",
+        "description": "Share of the tradable ETF universe above its own 200-day moving average, decimal 0-1.",
         "min": 0.0,
         "max": 1.0,
-        "source_note": "Use constituent prices available before the monthly decision date.",
+        "source_note": "Computed from local QQQ/GLD/SGOV daily price history available at the monthly decision date.",
     },
-    "crowding_score": {
-        "description": "Crowding/positioning heat score. Higher means more crowded unless normalized otherwise.",
-        "min": -5.0,
-        "max": 5.0,
-        "source_note": "Use point-in-time positioning or flow data available before the monthly decision date.",
+    "tbill_3m_rate": {
+        "description": "3-month Treasury bill secondary market discount rate as a decimal.",
+        "min": 0.0,
+        "max": 0.25,
+        "source_note": "Pulled from FRED DTB3 and converted from percent to decimal.",
     },
 }
 
@@ -134,7 +104,7 @@ def validate_factor_file() -> Dict[str, object]:
         }
 
     if row_count == 0:
-        warnings.append("monthly_factors.csv has only a header; fundamental factor coverage is 0%.")
+        warnings.append("monthly_factors.csv has only a header; generated factor coverage is 0%.")
     else:
         low_coverage = [
             name for name, stats in feature_stats.items()
@@ -154,7 +124,7 @@ def validate_factor_file() -> Dict[str, object]:
         "warnings": warnings,
         "point_in_time_rule": (
             "Each row must contain only data observable before that month's strategy decision date. "
-            "Do not revise historical rows with later analyst estimates, index composition, or positioning data."
+            "Label columns may use future data and must be used only for evaluation, never as input features."
         ),
     }
     REPORT_DIR.mkdir(exist_ok=True)

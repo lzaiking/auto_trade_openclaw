@@ -6,18 +6,10 @@
     "passed": false,
     "leakage_audit_passed": true,
     "factor_structure_passed": true,
-    "factor_coverage_ready": false,
+    "factor_coverage_ready": true,
     "calibration_ready": false,
-    "missing_factor_features": [
-      "eps_revision_score",
-      "forward_peg_score",
-      "fcf_yield_minus_tbill",
-      "ai_profit_conversion_score",
-      "top_weight_concentration",
-      "breadth_200dma",
-      "crowding_score"
-    ],
-    "diagnosis": "Prediction module is not strong enough for aggressive allocation; key monthly factor coverage is still missing."
+    "missing_factor_features": [],
+    "diagnosis": "Main rule-signal prediction AUC is still below target; the sklearn linear model is kept as a benchmark until its score-to-allocation mapping is validated."
   },
   "strategy_module": {
     "annualized_irr": 0.2203,

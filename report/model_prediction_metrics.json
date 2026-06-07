@@ -1,82 +1,82 @@
 {
   "estimator": "model_walk_forward",
   "sample_count": 180,
-  "overall_auc": 0.5281,
-  "overall_avg_price_auc": 0.5848,
-  "mse": 0.00242317,
-  "mae": 0.03234122,
+  "overall_auc": 0.5739,
+  "overall_avg_price_auc": 0.6441,
+  "mse": 0.00243728,
+  "mae": 0.03190905,
   "by_asset": {
     "QQQ": {
       "sample_count": 60,
-      "auc": 0.4785,
-      "avg_price_auc": 0.4689,
-      "direction_accuracy": 0.4667,
-      "avg_price_direction_accuracy": 0.5167,
-      "mae": 0.05712033
+      "auc": 0.5786,
+      "avg_price_auc": 0.544,
+      "direction_accuracy": 0.5833,
+      "avg_price_direction_accuracy": 0.6333,
+      "mae": 0.056416
     },
     "GLD": {
       "sample_count": 60,
-      "auc": 0.51,
-      "avg_price_auc": 0.4912,
-      "direction_accuracy": 0.55,
-      "avg_price_direction_accuracy": 0.5833,
-      "mae": 0.03859113
+      "auc": 0.5582,
+      "avg_price_auc": 0.6304,
+      "direction_accuracy": 0.5833,
+      "avg_price_direction_accuracy": 0.65,
+      "mae": 0.03813443
     },
     "SGOV": {
       "sample_count": 60,
-      "auc": 0.6205,
-      "avg_price_auc": 0.7491,
-      "direction_accuracy": 0.55,
-      "avg_price_direction_accuracy": 0.8667,
-      "mae": 0.00131219
+      "auc": 0.6357,
+      "avg_price_auc": 0.7309,
+      "direction_accuracy": 0.5667,
+      "avg_price_direction_accuracy": 0.85,
+      "mae": 0.00117673
     }
   },
   "yearly_auc": {
     "QQQ": {
       "2021": 0.5,
-      "2022": 0.3889,
-      "2023": 0.4571,
-      "2024": 0.5625,
-      "2025": 0.3125,
-      "2026": 0.3333
+      "2022": 0.3148,
+      "2023": 0.5571,
+      "2024": 0.5938,
+      "2025": 0.3438,
+      "2026": 0.6667
     },
     "GLD": {
       "2021": 0.5,
-      "2022": 0.4857,
-      "2023": 0.6111,
-      "2024": 0.45,
+      "2022": 0.4,
+      "2023": 0.5833,
+      "2024": 0.35,
       "2025": 0.2,
-      "2026": 0.0
+      "2026": 0.3333
     },
     "SGOV": {
       "2021": 0.5,
-      "2022": 0.5556,
-      "2023": 0.4714,
-      "2024": 0.3333,
-      "2025": 0.7222,
-      "2026": 0.6667
+      "2022": 0.6389,
+      "2023": 0.5143,
+      "2024": 0.3704,
+      "2025": 0.9444,
+      "2026": 0.8333
     }
   },
   "yearly_avg_price_auc": {
     "QQQ": {
       "2021": 0.5,
-      "2022": 0.2344,
-      "2023": 0.4571,
-      "2024": 0.45,
-      "2025": 0.2963,
-      "2026": 0.3333
+      "2022": 0.1719,
+      "2023": 0.5571,
+      "2024": 0.4,
+      "2025": 0.2593,
+      "2026": 0.6667
     },
     "GLD": {
       "2021": 0.5,
-      "2022": 0.3714,
-      "2023": 0.4857,
-      "2024": 0.5312,
-      "2025": 0.4545,
-      "2026": 0.0
+      "2022": 0.8286,
+      "2023": 0.6,
+      "2024": 0.4688,
+      "2025": 0.2727,
+      "2026": 0.3333
     },
     "SGOV": {
       "2021": 0.5,
-      "2022": 0.675,
+      "2022": 0.425,
       "2023": 0.2727,
       "2024": null,
       "2025": null,
@@ -86,15 +86,15 @@
   "score_calibration": {
     "QQQ": {
       "available": true,
-      "lowest_bucket_avg_return": 0.032383,
-      "highest_bucket_avg_return": 0.014218,
-      "high_minus_low_return": -0.018165,
-      "lowest_bucket_avg_price_return": 0.016231,
-      "highest_bucket_avg_price_return": 0.011473,
-      "high_minus_low_avg_price_return": -0.004758,
+      "lowest_bucket_avg_return": 0.03424,
+      "highest_bucket_avg_return": 0.021495,
+      "high_minus_low_return": -0.012745,
+      "lowest_bucket_avg_price_return": 0.017495,
+      "highest_bucket_avg_price_return": 0.013014,
+      "high_minus_low_avg_price_return": -0.004481,
       "lowest_bucket_up_rate": 0.5833,
-      "highest_bucket_up_rate": 0.5833,
-      "high_minus_low_up_rate": 0.0,
+      "highest_bucket_up_rate": 0.6667,
+      "high_minus_low_up_rate": 0.0834,
       "lowest_bucket_avg_price_up_rate": 0.6667,
       "highest_bucket_avg_price_up_rate": 0.6667,
       "high_minus_low_avg_price_up_rate": 0.0,
@@ -103,74 +103,49 @@
     },
     "GLD": {
       "available": true,
-      "lowest_bucket_avg_return": 0.009665,
-      "highest_bucket_avg_return": 0.013697,
-      "high_minus_low_return": 0.004032,
-      "lowest_bucket_avg_price_return": 0.004095,
-      "highest_bucket_avg_price_return": 0.011118,
-      "high_minus_low_avg_price_return": 0.007023,
+      "lowest_bucket_avg_return": 0.007509,
+      "highest_bucket_avg_return": 0.021215,
+      "high_minus_low_return": 0.013706,
+      "lowest_bucket_avg_price_return": -0.001606,
+      "highest_bucket_avg_price_return": 0.018989,
+      "high_minus_low_avg_price_return": 0.020595,
       "lowest_bucket_up_rate": 0.5833,
-      "highest_bucket_up_rate": 0.5,
-      "high_minus_low_up_rate": -0.0833,
-      "lowest_bucket_avg_price_up_rate": 0.5833,
-      "highest_bucket_avg_price_up_rate": 0.5,
-      "high_minus_low_avg_price_up_rate": -0.0833,
+      "highest_bucket_up_rate": 0.5833,
+      "high_minus_low_up_rate": 0.0,
+      "lowest_bucket_avg_price_up_rate": 0.4167,
+      "highest_bucket_avg_price_up_rate": 0.6667,
+      "high_minus_low_avg_price_up_rate": 0.25,
       "monotonic_return_buckets": false,
       "monotonic_avg_price_return_buckets": false
     },
     "SGOV": {
       "available": true,
-      "lowest_bucket_avg_return": 0.000383,
-      "highest_bucket_avg_return": 0.000474,
-      "high_minus_low_return": 9.1e-05,
-      "lowest_bucket_avg_price_return": 0.000473,
-      "highest_bucket_avg_price_return": 0.001953,
-      "high_minus_low_avg_price_return": 0.00148,
-      "lowest_bucket_up_rate": 0.5,
-      "highest_bucket_up_rate": 0.6667,
-      "high_minus_low_up_rate": 0.1667,
-      "lowest_bucket_avg_price_up_rate": 0.75,
+      "lowest_bucket_avg_return": 0.000399,
+      "highest_bucket_avg_return": 0.000599,
+      "high_minus_low_return": 0.0002,
+      "lowest_bucket_avg_price_return": 0.000516,
+      "highest_bucket_avg_price_return": 0.001667,
+      "high_minus_low_avg_price_return": 0.001151,
+      "lowest_bucket_up_rate": 0.4167,
+      "highest_bucket_up_rate": 0.75,
+      "high_minus_low_up_rate": 0.3333,
+      "lowest_bucket_avg_price_up_rate": 0.8333,
       "highest_bucket_avg_price_up_rate": 1,
-      "high_minus_low_avg_price_up_rate": 0.25,
+      "high_minus_low_avg_price_up_rate": 0.1667,
       "monotonic_return_buckets": false,
       "monotonic_avg_price_return_buckets": true
     }
   },
   "feature_coverage": {
-    "eps_revision_score": {
-      "present_count": 0,
-      "total_count": 180,
-      "coverage": 0.0
-    },
-    "forward_peg_score": {
-      "present_count": 0,
-      "total_count": 180,
-      "coverage": 0.0
-    },
-    "fcf_yield_minus_tbill": {
-      "present_count": 0,
-      "total_count": 180,
-      "coverage": 0.0
-    },
-    "ai_profit_conversion_score": {
-      "present_count": 0,
-      "total_count": 180,
-      "coverage": 0.0
-    },
-    "top_weight_concentration": {
-      "present_count": 0,
-      "total_count": 180,
-      "coverage": 0.0
-    },
     "breadth_200dma": {
-      "present_count": 0,
+      "present_count": 180,
       "total_count": 180,
-      "coverage": 0.0
+      "coverage": 1.0
     },
-    "crowding_score": {
-      "present_count": 0,
+    "tbill_3m_rate": {
+      "present_count": 180,
       "total_count": 180,
-      "coverage": 0.0
+      "coverage": 1.0
     },
     "asset_extension_200dma": {
       "present_count": 180,
@@ -189,40 +164,15 @@
     }
   },
   "single_feature_auc": {
-    "eps_revision_score": {
-      "auc": null,
-      "coverage": 0.0,
-      "direction": "insufficient_data"
-    },
-    "forward_peg_score": {
-      "auc": null,
-      "coverage": 0.0,
-      "direction": "insufficient_data"
-    },
-    "fcf_yield_minus_tbill": {
-      "auc": null,
-      "coverage": 0.0,
-      "direction": "insufficient_data"
-    },
-    "ai_profit_conversion_score": {
-      "auc": null,
-      "coverage": 0.0,
-      "direction": "insufficient_data"
-    },
-    "top_weight_concentration": {
-      "auc": null,
-      "coverage": 0.0,
-      "direction": "insufficient_data"
-    },
     "breadth_200dma": {
-      "auc": null,
-      "coverage": 0.0,
-      "direction": "insufficient_data"
+      "auc": 0.556,
+      "coverage": 1.0,
+      "direction": "lower_is_better"
     },
-    "crowding_score": {
-      "auc": null,
-      "coverage": 0.0,
-      "direction": "insufficient_data"
+    "tbill_3m_rate": {
+      "auc": 0.5918,
+      "coverage": 1.0,
+      "direction": "higher_is_better"
     },
     "asset_extension_200dma": {
       "auc": 0.5096,
@@ -240,27 +190,599 @@
       "direction": "higher_is_better"
     }
   },
+  "linear_feature_importance": {
+    "QQQ": {
+      "endpoint_return": [
+        {
+          "mean_coefficient": 0.00975318,
+          "mean_abs_coefficient": 0.01340011,
+          "positive_share": 0.8333,
+          "negative_share": 0.1667,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.01330978,
+          "mean_abs_coefficient": 0.01330978,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": 0.01178165,
+          "mean_abs_coefficient": 0.01178165,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "asset_extension_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.00987889,
+          "mean_abs_coefficient": 0.00987889,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.00118692,
+          "mean_abs_coefficient": 0.00179485,
+          "positive_share": 0.3958,
+          "negative_share": 0.6042,
+          "sign": "mixed",
+          "feature": "breadth_200dma",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        }
+      ],
+      "avg_price_return": [
+        {
+          "mean_coefficient": 0.00567067,
+          "mean_abs_coefficient": 0.00697051,
+          "positive_share": 0.875,
+          "negative_share": 0.125,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.00384984,
+          "mean_abs_coefficient": 0.00384984,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "asset_extension_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.00377224,
+          "mean_abs_coefficient": 0.00377224,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.00293472,
+          "mean_abs_coefficient": 0.00314946,
+          "positive_share": 0.0833,
+          "negative_share": 0.9167,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -0.0011398,
+          "mean_abs_coefficient": 0.00130661,
+          "positive_share": 0.1042,
+          "negative_share": 0.8958,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        }
+      ],
+      "endpoint_up_probability": [
+        {
+          "mean_coefficient": 0.26389154,
+          "mean_abs_coefficient": 0.26389154,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "asset_extension_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.19012436,
+          "mean_abs_coefficient": 0.19012436,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.11160882,
+          "mean_abs_coefficient": 0.11160882,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": 0.06979253,
+          "mean_abs_coefficient": 0.09639384,
+          "positive_share": 0.8542,
+          "negative_share": 0.1458,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.0004754,
+          "mean_abs_coefficient": 0.01674171,
+          "positive_share": 0.2917,
+          "negative_share": 0.7083,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        }
+      ],
+      "avg_price_up_probability": [
+        {
+          "mean_coefficient": 0.10600047,
+          "mean_abs_coefficient": 0.10600047,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "asset_extension_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.08574835,
+          "mean_abs_coefficient": 0.08574835,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.04009107,
+          "mean_abs_coefficient": 0.04453037,
+          "positive_share": 0.1875,
+          "negative_share": 0.8125,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.00624905,
+          "mean_abs_coefficient": 0.03602223,
+          "positive_share": 0.625,
+          "negative_share": 0.375,
+          "sign": "mixed",
+          "feature": "tbill_3m_rate",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        },
+        {
+          "mean_coefficient": 0.00328454,
+          "mean_abs_coefficient": 0.01635441,
+          "positive_share": 0.5,
+          "negative_share": 0.5,
+          "sign": "mixed",
+          "feature": "asset_rsi_14",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        }
+      ]
+    },
+    "GLD": {
+      "endpoint_return": [
+        {
+          "mean_coefficient": 0.00551765,
+          "mean_abs_coefficient": 0.00810228,
+          "positive_share": 0.8542,
+          "negative_share": 0.1458,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.00710946,
+          "mean_abs_coefficient": 0.00710946,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -0.00648123,
+          "mean_abs_coefficient": 0.00648123,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.00070626,
+          "mean_abs_coefficient": 0.00401443,
+          "positive_share": 0.4583,
+          "negative_share": 0.5417,
+          "sign": "mixed",
+          "feature": "asset_extension_200dma",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        },
+        {
+          "mean_coefficient": -0.00056302,
+          "mean_abs_coefficient": 0.00259467,
+          "positive_share": 0.4375,
+          "negative_share": 0.5625,
+          "sign": "mixed",
+          "feature": "asset_return_63d",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        }
+      ],
+      "avg_price_return": [
+        {
+          "mean_coefficient": -0.00408619,
+          "mean_abs_coefficient": 0.00408619,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.00360715,
+          "mean_abs_coefficient": 0.00360715,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": 0.00276867,
+          "mean_abs_coefficient": 0.00339145,
+          "positive_share": 0.6667,
+          "negative_share": 0.3333,
+          "sign": "positive",
+          "feature": "asset_extension_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.00205794,
+          "mean_abs_coefficient": 0.00307019,
+          "positive_share": 0.8542,
+          "negative_share": 0.1458,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.0012816,
+          "mean_abs_coefficient": 0.00215262,
+          "positive_share": 0.2708,
+          "negative_share": 0.7292,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        }
+      ],
+      "endpoint_up_probability": [
+        {
+          "mean_coefficient": -0.10956531,
+          "mean_abs_coefficient": 0.10956531,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -0.04714417,
+          "mean_abs_coefficient": 0.09796376,
+          "positive_share": 0.4375,
+          "negative_share": 0.5625,
+          "sign": "mixed",
+          "feature": "asset_extension_200dma",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        },
+        {
+          "mean_coefficient": 0.01484222,
+          "mean_abs_coefficient": 0.09142185,
+          "positive_share": 0.8333,
+          "negative_share": 0.1667,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.04283585,
+          "mean_abs_coefficient": 0.04589086,
+          "positive_share": 0.875,
+          "negative_share": 0.125,
+          "sign": "positive",
+          "feature": "asset_return_63d",
+          "note": "\u4e2d\u671f\u6da8\u5e45\u6b63\u5411\u8bf4\u660e\u6a21\u578b\u504f\u52a8\u91cf\u89e3\u91ca\uff0c\u9002\u5408\u548c\u8fc7\u70ed\u6307\u6807\u4e00\u8d77\u770b\u3002"
+        },
+        {
+          "mean_coefficient": -0.0427675,
+          "mean_abs_coefficient": 0.04279556,
+          "positive_share": 0.0417,
+          "negative_share": 0.9583,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        }
+      ],
+      "avg_price_up_probability": [
+        {
+          "mean_coefficient": 0.11802212,
+          "mean_abs_coefficient": 0.11802212,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "asset_extension_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.07550974,
+          "mean_abs_coefficient": 0.07550974,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -0.05648243,
+          "mean_abs_coefficient": 0.05648243,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.04954182,
+          "mean_abs_coefficient": 0.04959103,
+          "positive_share": 0.0208,
+          "negative_share": 0.9792,
+          "sign": "negative",
+          "feature": "tbill_3m_rate",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.01268436,
+          "mean_abs_coefficient": 0.03930069,
+          "positive_share": 0.5208,
+          "negative_share": 0.4792,
+          "sign": "mixed",
+          "feature": "asset_return_63d",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        }
+      ]
+    },
+    "SGOV": {
+      "endpoint_return": [
+        {
+          "mean_coefficient": -0.00029916,
+          "mean_abs_coefficient": 0.0002996,
+          "positive_share": 0.0208,
+          "negative_share": 0.9792,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.00025278,
+          "mean_abs_coefficient": 0.00025278,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u77ed\u503a\u5229\u7387\u8d8a\u9ad8\u8d8a\u5229\u597d SGOV \u6536\u76ca\uff0c\u7b26\u5408\u8d44\u4ea7\u5c5e\u6027\u3002"
+        },
+        {
+          "mean_coefficient": -0.00013109,
+          "mean_abs_coefficient": 0.00014653,
+          "positive_share": 0.0625,
+          "negative_share": 0.9375,
+          "sign": "negative",
+          "feature": "asset_extension_200dma",
+          "note": "\u4ef7\u683c\u8d8a\u9ad8\u4e8e 200 \u65e5\u5747\u7ebf\u8d8a\u5bb9\u6613\u504f\u8d35\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u4f30\u503c/\u62e5\u6324\u964d\u6e29\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -3.97e-05,
+          "mean_abs_coefficient": 4.256e-05,
+          "positive_share": 0.0625,
+          "negative_share": 0.9375,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 2.07e-05,
+          "mean_abs_coefficient": 3.818e-05,
+          "positive_share": 0.5833,
+          "negative_share": 0.4167,
+          "sign": "mixed",
+          "feature": "asset_rsi_14",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        }
+      ],
+      "avg_price_return": [
+        {
+          "mean_coefficient": 0.00053848,
+          "mean_abs_coefficient": 0.00053848,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u77ed\u503a\u5229\u7387\u8d8a\u9ad8\u8d8a\u5229\u597d SGOV \u6536\u76ca\uff0c\u7b26\u5408\u8d44\u4ea7\u5c5e\u6027\u3002"
+        },
+        {
+          "mean_coefficient": -0.0001042,
+          "mean_abs_coefficient": 0.00010653,
+          "positive_share": 0.0417,
+          "negative_share": 0.9583,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -7.377e-05,
+          "mean_abs_coefficient": 9.252e-05,
+          "positive_share": 0.125,
+          "negative_share": 0.875,
+          "sign": "negative",
+          "feature": "asset_extension_200dma",
+          "note": "\u4ef7\u683c\u8d8a\u9ad8\u4e8e 200 \u65e5\u5747\u7ebf\u8d8a\u5bb9\u6613\u504f\u8d35\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u4f30\u503c/\u62e5\u6324\u964d\u6e29\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -3.244e-05,
+          "mean_abs_coefficient": 4.919e-05,
+          "positive_share": 0.2917,
+          "negative_share": 0.7083,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -2.453e-05,
+          "mean_abs_coefficient": 2.936e-05,
+          "positive_share": 0.1458,
+          "negative_share": 0.8542,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        }
+      ],
+      "endpoint_up_probability": [
+        {
+          "mean_coefficient": -0.12077131,
+          "mean_abs_coefficient": 0.12077131,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -0.09092533,
+          "mean_abs_coefficient": 0.09092533,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.07203755,
+          "mean_abs_coefficient": 0.07203755,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_extension_200dma",
+          "note": "\u4ef7\u683c\u8d8a\u9ad8\u4e8e 200 \u65e5\u5747\u7ebf\u8d8a\u5bb9\u6613\u504f\u8d35\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u4f30\u503c/\u62e5\u6324\u964d\u6e29\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -0.03476611,
+          "mean_abs_coefficient": 0.03496197,
+          "positive_share": 0.0208,
+          "negative_share": 0.9792,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": 0.0261203,
+          "mean_abs_coefficient": 0.0261203,
+          "positive_share": 1.0,
+          "negative_share": 0.0,
+          "sign": "positive",
+          "feature": "tbill_3m_rate",
+          "note": "\u77ed\u503a\u5229\u7387\u8d8a\u9ad8\u8d8a\u5229\u597d SGOV \u6536\u76ca\uff0c\u7b26\u5408\u8d44\u4ea7\u5c5e\u6027\u3002"
+        }
+      ],
+      "avg_price_up_probability": [
+        {
+          "mean_coefficient": -0.0966452,
+          "mean_abs_coefficient": 0.0966452,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "asset_rsi_14",
+          "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+        },
+        {
+          "mean_coefficient": -0.06214238,
+          "mean_abs_coefficient": 0.06214238,
+          "positive_share": 0.0,
+          "negative_share": 1.0,
+          "sign": "negative",
+          "feature": "breadth_200dma",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.03401763,
+          "mean_abs_coefficient": 0.03766715,
+          "positive_share": 0.0833,
+          "negative_share": 0.9167,
+          "sign": "negative",
+          "feature": "asset_return_63d",
+          "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+        },
+        {
+          "mean_coefficient": -0.00210637,
+          "mean_abs_coefficient": 0.01528316,
+          "positive_share": 0.4167,
+          "negative_share": 0.5833,
+          "sign": "mixed",
+          "feature": "asset_extension_200dma",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        },
+        {
+          "mean_coefficient": 0.00818562,
+          "mean_abs_coefficient": 0.01287435,
+          "positive_share": 0.6458,
+          "negative_share": 0.3542,
+          "sign": "mixed",
+          "feature": "tbill_3m_rate",
+          "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+        }
+      ]
+    }
+  },
   "latest_predictions": {
     "QQQ": {
       "date": "2026-06-01",
-      "score": 0.522131,
-      "predicted_1m_return": 0.004426,
+      "score": 0.517457,
+      "predicted_1m_return": 0.003491,
       "actual_forward_1m_return": null,
       "actual_forward_1m_avg_return": null,
       "sample_size": 59
     },
     "GLD": {
       "date": "2026-06-01",
-      "score": 0.798846,
-      "predicted_1m_return": 0.059769,
+      "score": 0.708802,
+      "predicted_1m_return": 0.036052,
       "actual_forward_1m_return": null,
       "actual_forward_1m_avg_return": null,
       "sample_size": 59
     },
     "SGOV": {
       "date": "2026-06-01",
-      "score": 0.621581,
-      "predicted_1m_return": 0.000598,
+      "score": 0.629732,
+      "predicted_1m_return": 0.000537,
       "actual_forward_1m_return": null,
       "actual_forward_1m_avg_return": null,
       "sample_size": 59

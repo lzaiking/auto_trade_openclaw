@@ -1,0 +1,572 @@
+{
+  "QQQ": {
+    "endpoint_return": [
+      {
+        "mean_coefficient": 0.00975318,
+        "mean_abs_coefficient": 0.01340011,
+        "positive_share": 0.8333,
+        "negative_share": 0.1667,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.01330978,
+        "mean_abs_coefficient": 0.01330978,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": 0.01178165,
+        "mean_abs_coefficient": 0.01178165,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "asset_extension_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.00987889,
+        "mean_abs_coefficient": 0.00987889,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.00118692,
+        "mean_abs_coefficient": 0.00179485,
+        "positive_share": 0.3958,
+        "negative_share": 0.6042,
+        "sign": "mixed",
+        "feature": "breadth_200dma",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      }
+    ],
+    "avg_price_return": [
+      {
+        "mean_coefficient": 0.00567067,
+        "mean_abs_coefficient": 0.00697051,
+        "positive_share": 0.875,
+        "negative_share": 0.125,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.00384984,
+        "mean_abs_coefficient": 0.00384984,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "asset_extension_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.00377224,
+        "mean_abs_coefficient": 0.00377224,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.00293472,
+        "mean_abs_coefficient": 0.00314946,
+        "positive_share": 0.0833,
+        "negative_share": 0.9167,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -0.0011398,
+        "mean_abs_coefficient": 0.00130661,
+        "positive_share": 0.1042,
+        "negative_share": 0.8958,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      }
+    ],
+    "endpoint_up_probability": [
+      {
+        "mean_coefficient": 0.26389154,
+        "mean_abs_coefficient": 0.26389154,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "asset_extension_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.19012436,
+        "mean_abs_coefficient": 0.19012436,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.11160882,
+        "mean_abs_coefficient": 0.11160882,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": 0.06979253,
+        "mean_abs_coefficient": 0.09639384,
+        "positive_share": 0.8542,
+        "negative_share": 0.1458,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.0004754,
+        "mean_abs_coefficient": 0.01674171,
+        "positive_share": 0.2917,
+        "negative_share": 0.7083,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      }
+    ],
+    "avg_price_up_probability": [
+      {
+        "mean_coefficient": 0.10600047,
+        "mean_abs_coefficient": 0.10600047,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "asset_extension_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.08574835,
+        "mean_abs_coefficient": 0.08574835,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.04009107,
+        "mean_abs_coefficient": 0.04453037,
+        "positive_share": 0.1875,
+        "negative_share": 0.8125,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.00624905,
+        "mean_abs_coefficient": 0.03602223,
+        "positive_share": 0.625,
+        "negative_share": 0.375,
+        "sign": "mixed",
+        "feature": "tbill_3m_rate",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      },
+      {
+        "mean_coefficient": 0.00328454,
+        "mean_abs_coefficient": 0.01635441,
+        "positive_share": 0.5,
+        "negative_share": 0.5,
+        "sign": "mixed",
+        "feature": "asset_rsi_14",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      }
+    ]
+  },
+  "GLD": {
+    "endpoint_return": [
+      {
+        "mean_coefficient": 0.00551765,
+        "mean_abs_coefficient": 0.00810228,
+        "positive_share": 0.8542,
+        "negative_share": 0.1458,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.00710946,
+        "mean_abs_coefficient": 0.00710946,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -0.00648123,
+        "mean_abs_coefficient": 0.00648123,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.00070626,
+        "mean_abs_coefficient": 0.00401443,
+        "positive_share": 0.4583,
+        "negative_share": 0.5417,
+        "sign": "mixed",
+        "feature": "asset_extension_200dma",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      },
+      {
+        "mean_coefficient": -0.00056302,
+        "mean_abs_coefficient": 0.00259467,
+        "positive_share": 0.4375,
+        "negative_share": 0.5625,
+        "sign": "mixed",
+        "feature": "asset_return_63d",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      }
+    ],
+    "avg_price_return": [
+      {
+        "mean_coefficient": -0.00408619,
+        "mean_abs_coefficient": 0.00408619,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.00360715,
+        "mean_abs_coefficient": 0.00360715,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": 0.00276867,
+        "mean_abs_coefficient": 0.00339145,
+        "positive_share": 0.6667,
+        "negative_share": 0.3333,
+        "sign": "positive",
+        "feature": "asset_extension_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.00205794,
+        "mean_abs_coefficient": 0.00307019,
+        "positive_share": 0.8542,
+        "negative_share": 0.1458,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.0012816,
+        "mean_abs_coefficient": 0.00215262,
+        "positive_share": 0.2708,
+        "negative_share": 0.7292,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      }
+    ],
+    "endpoint_up_probability": [
+      {
+        "mean_coefficient": -0.10956531,
+        "mean_abs_coefficient": 0.10956531,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -0.04714417,
+        "mean_abs_coefficient": 0.09796376,
+        "positive_share": 0.4375,
+        "negative_share": 0.5625,
+        "sign": "mixed",
+        "feature": "asset_extension_200dma",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      },
+      {
+        "mean_coefficient": 0.01484222,
+        "mean_abs_coefficient": 0.09142185,
+        "positive_share": 0.8333,
+        "negative_share": 0.1667,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.04283585,
+        "mean_abs_coefficient": 0.04589086,
+        "positive_share": 0.875,
+        "negative_share": 0.125,
+        "sign": "positive",
+        "feature": "asset_return_63d",
+        "note": "\u4e2d\u671f\u6da8\u5e45\u6b63\u5411\u8bf4\u660e\u6a21\u578b\u504f\u52a8\u91cf\u89e3\u91ca\uff0c\u9002\u5408\u548c\u8fc7\u70ed\u6307\u6807\u4e00\u8d77\u770b\u3002"
+      },
+      {
+        "mean_coefficient": -0.0427675,
+        "mean_abs_coefficient": 0.04279556,
+        "positive_share": 0.0417,
+        "negative_share": 0.9583,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      }
+    ],
+    "avg_price_up_probability": [
+      {
+        "mean_coefficient": 0.11802212,
+        "mean_abs_coefficient": 0.11802212,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "asset_extension_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.07550974,
+        "mean_abs_coefficient": 0.07550974,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -0.05648243,
+        "mean_abs_coefficient": 0.05648243,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.04954182,
+        "mean_abs_coefficient": 0.04959103,
+        "positive_share": 0.0208,
+        "negative_share": 0.9792,
+        "sign": "negative",
+        "feature": "tbill_3m_rate",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.01268436,
+        "mean_abs_coefficient": 0.03930069,
+        "positive_share": 0.5208,
+        "negative_share": 0.4792,
+        "sign": "mixed",
+        "feature": "asset_return_63d",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      }
+    ]
+  },
+  "SGOV": {
+    "endpoint_return": [
+      {
+        "mean_coefficient": -0.00029916,
+        "mean_abs_coefficient": 0.0002996,
+        "positive_share": 0.0208,
+        "negative_share": 0.9792,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.00025278,
+        "mean_abs_coefficient": 0.00025278,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u77ed\u503a\u5229\u7387\u8d8a\u9ad8\u8d8a\u5229\u597d SGOV \u6536\u76ca\uff0c\u7b26\u5408\u8d44\u4ea7\u5c5e\u6027\u3002"
+      },
+      {
+        "mean_coefficient": -0.00013109,
+        "mean_abs_coefficient": 0.00014653,
+        "positive_share": 0.0625,
+        "negative_share": 0.9375,
+        "sign": "negative",
+        "feature": "asset_extension_200dma",
+        "note": "\u4ef7\u683c\u8d8a\u9ad8\u4e8e 200 \u65e5\u5747\u7ebf\u8d8a\u5bb9\u6613\u504f\u8d35\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u4f30\u503c/\u62e5\u6324\u964d\u6e29\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -3.97e-05,
+        "mean_abs_coefficient": 4.256e-05,
+        "positive_share": 0.0625,
+        "negative_share": 0.9375,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 2.07e-05,
+        "mean_abs_coefficient": 3.818e-05,
+        "positive_share": 0.5833,
+        "negative_share": 0.4167,
+        "sign": "mixed",
+        "feature": "asset_rsi_14",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      }
+    ],
+    "avg_price_return": [
+      {
+        "mean_coefficient": 0.00053848,
+        "mean_abs_coefficient": 0.00053848,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u77ed\u503a\u5229\u7387\u8d8a\u9ad8\u8d8a\u5229\u597d SGOV \u6536\u76ca\uff0c\u7b26\u5408\u8d44\u4ea7\u5c5e\u6027\u3002"
+      },
+      {
+        "mean_coefficient": -0.0001042,
+        "mean_abs_coefficient": 0.00010653,
+        "positive_share": 0.0417,
+        "negative_share": 0.9583,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -7.377e-05,
+        "mean_abs_coefficient": 9.252e-05,
+        "positive_share": 0.125,
+        "negative_share": 0.875,
+        "sign": "negative",
+        "feature": "asset_extension_200dma",
+        "note": "\u4ef7\u683c\u8d8a\u9ad8\u4e8e 200 \u65e5\u5747\u7ebf\u8d8a\u5bb9\u6613\u504f\u8d35\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u4f30\u503c/\u62e5\u6324\u964d\u6e29\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -3.244e-05,
+        "mean_abs_coefficient": 4.919e-05,
+        "positive_share": 0.2917,
+        "negative_share": 0.7083,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -2.453e-05,
+        "mean_abs_coefficient": 2.936e-05,
+        "positive_share": 0.1458,
+        "negative_share": 0.8542,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      }
+    ],
+    "endpoint_up_probability": [
+      {
+        "mean_coefficient": -0.12077131,
+        "mean_abs_coefficient": 0.12077131,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -0.09092533,
+        "mean_abs_coefficient": 0.09092533,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.07203755,
+        "mean_abs_coefficient": 0.07203755,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_extension_200dma",
+        "note": "\u4ef7\u683c\u8d8a\u9ad8\u4e8e 200 \u65e5\u5747\u7ebf\u8d8a\u5bb9\u6613\u504f\u8d35\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u4f30\u503c/\u62e5\u6324\u964d\u6e29\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -0.03476611,
+        "mean_abs_coefficient": 0.03496197,
+        "positive_share": 0.0208,
+        "negative_share": 0.9792,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": 0.0261203,
+        "mean_abs_coefficient": 0.0261203,
+        "positive_share": 1.0,
+        "negative_share": 0.0,
+        "sign": "positive",
+        "feature": "tbill_3m_rate",
+        "note": "\u77ed\u503a\u5229\u7387\u8d8a\u9ad8\u8d8a\u5229\u597d SGOV \u6536\u76ca\uff0c\u7b26\u5408\u8d44\u4ea7\u5c5e\u6027\u3002"
+      }
+    ],
+    "avg_price_up_probability": [
+      {
+        "mean_coefficient": -0.0966452,
+        "mean_abs_coefficient": 0.0966452,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "asset_rsi_14",
+        "note": "RSI \u8d8a\u9ad8\u8d8a\u5bb9\u6613\u77ed\u671f\u8fc7\u70ed\uff0c\u8d1f\u5411\u7cfb\u6570\u7b26\u5408\u5747\u503c\u56de\u5f52\u5e38\u8bc6\u3002"
+      },
+      {
+        "mean_coefficient": -0.06214238,
+        "mean_abs_coefficient": 0.06214238,
+        "positive_share": 0.0,
+        "negative_share": 1.0,
+        "sign": "negative",
+        "feature": "breadth_200dma",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.03401763,
+        "mean_abs_coefficient": 0.03766715,
+        "positive_share": 0.0833,
+        "negative_share": 0.9167,
+        "sign": "negative",
+        "feature": "asset_return_63d",
+        "note": "\u65b9\u5411\u6ca1\u6709\u660e\u663e\u8fdd\u80cc\u5e38\u8bc6\uff0c\u4f46\u9700\u8981\u7ed3\u5408\u5355\u7279\u5f81 AUC \u548c\u5206\u6876\u6821\u51c6\u786e\u8ba4\u3002"
+      },
+      {
+        "mean_coefficient": -0.00210637,
+        "mean_abs_coefficient": 0.01528316,
+        "positive_share": 0.4167,
+        "negative_share": 0.5833,
+        "sign": "mixed",
+        "feature": "asset_extension_200dma",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      },
+      {
+        "mean_coefficient": 0.00818562,
+        "mean_abs_coefficient": 0.01287435,
+        "positive_share": 0.6458,
+        "negative_share": 0.3542,
+        "sign": "mixed",
+        "feature": "tbill_3m_rate",
+        "note": "\u7b26\u53f7\u4e0d\u7a33\u5b9a\uff0c\u8bf4\u660e\u5f53\u524d\u6837\u672c\u4e0b\u89c4\u5f8b\u4e0d\u591f\u7a33\u3002"
+      }
+    ]
+  }
+}

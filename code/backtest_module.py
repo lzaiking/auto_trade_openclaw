@@ -16,7 +16,7 @@ from market_data import (
     save_csv,
 )
 from factor_validation import validate_factor_file
-from prediction_module import build_asset_observations, leakage_audit, run_prediction_strategy, run_walk_forward_predictions, save_prediction_outputs
+from prediction_module import FACTOR_FEATURES, build_asset_observations, leakage_audit, run_prediction_strategy, run_walk_forward_predictions, save_prediction_outputs
 from strategy_module import build_orders, run_allocated_strategy, run_monthly_qqq_dca, strategy_sweep
 
 TARGET_ANNUALIZED_IRR = 0.30
@@ -77,15 +77,7 @@ def write_module_scorecard(
     coverage = prediction_stats.get("feature_coverage", {})
     missing_factor_features = [
         name for name, stats in coverage.items()
-        if name in {
-            "eps_revision_score",
-            "forward_peg_score",
-            "fcf_yield_minus_tbill",
-            "ai_profit_conversion_score",
-            "top_weight_concentration",
-            "breadth_200dma",
-            "crowding_score",
-        } and stats.get("coverage", 0.0) < 0.5
+        if name in set(FACTOR_FEATURES) and stats.get("coverage", 0.0) < 0.5
     ]
     annualized_irr = strategy_summary["annualized_irr"]
     max_drawdown = strategy_summary["max_drawdown"]
@@ -109,6 +101,19 @@ def write_module_scorecard(
         and factor_coverage_ready
         and calibration_ready
     )
+    if prediction_passed:
+        prediction_diagnosis = "Prediction module meets the initial AUC threshold."
+    elif not factor_coverage_ready:
+        prediction_diagnosis = "Prediction module is not ready because generated factor coverage is still insufficient."
+    elif overall_auc < TARGET_AUC:
+        prediction_diagnosis = (
+            "Main rule-signal prediction AUC is still below target; the sklearn linear model is kept as a benchmark "
+            "until its score-to-allocation mapping is validated."
+        )
+    elif not calibration_ready:
+        prediction_diagnosis = "Prediction score calibration is not stable enough for aggressive allocation."
+    else:
+        prediction_diagnosis = "Prediction module is not ready for aggressive allocation."
     scorecard = {
         "prediction_module": {
             "overall_auc": overall_auc,
@@ -120,11 +125,7 @@ def write_module_scorecard(
             "factor_coverage_ready": factor_coverage_ready,
             "calibration_ready": calibration_ready,
             "missing_factor_features": missing_factor_features,
-            "diagnosis": (
-                "Prediction module is not strong enough for aggressive allocation; key monthly factor coverage is still missing."
-                if not prediction_passed else
-                "Prediction module meets the initial AUC threshold."
-            ),
+            "diagnosis": prediction_diagnosis,
         },
         "strategy_module": {
             "annualized_irr": annualized_irr,

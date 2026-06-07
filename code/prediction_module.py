@@ -26,19 +26,48 @@ from market_data import (
     sma,
 )
 
+try:
+    from sklearn.linear_model import RidgeCV
+except Exception:  # pragma: no cover - optional runtime dependency
+    RidgeCV = None
+
 MIN_TRAINING_SAMPLES = 12
 RIDGE_LAMBDA = 1e-4
+SKLEARN_RIDGE_ALPHAS = (1e-4, 1e-3, 1e-2, 1e-1, 1.0, 10.0)
 SCORE_RETURN_SCALE = 0.10
 SCORE_PROBABILITY_WEIGHT = 0.50
 
 FACTOR_FEATURES = [
-    "eps_revision_score",
-    "forward_peg_score",
-    "fcf_yield_minus_tbill",
-    "ai_profit_conversion_score",
-    "top_weight_concentration",
     "breadth_200dma",
-    "crowding_score",
+    "tbill_3m_rate",
+]
+FACTOR_DATA_COLUMNS = [
+    "qqq_close",
+    "gld_close",
+    "sgov_close",
+    "qqq_extension_200dma",
+    "qqq_rsi_14",
+    "qqq_return_63d",
+    "gld_extension_200dma",
+    "gld_rsi_14",
+    "gld_return_63d",
+    "sgov_extension_200dma",
+    "sgov_rsi_14",
+    "sgov_return_63d",
+]
+LABEL_COLUMNS = [
+    "label_qqq_forward_30d_return",
+    "label_qqq_forward_30d_avg_return",
+    "label_qqq_forward_30d_up",
+    "label_qqq_forward_30d_avg_up",
+    "label_gld_forward_30d_return",
+    "label_gld_forward_30d_avg_return",
+    "label_gld_forward_30d_up",
+    "label_gld_forward_30d_avg_up",
+    "label_sgov_forward_30d_return",
+    "label_sgov_forward_30d_avg_return",
+    "label_sgov_forward_30d_up",
+    "label_sgov_forward_30d_avg_up",
 ]
 ASSET_PRICE_FEATURES = [
     "asset_extension_200dma",
@@ -46,7 +75,7 @@ ASSET_PRICE_FEATURES = [
     "asset_return_63d",
 ]
 FEATURES = FACTOR_FEATURES + ASSET_PRICE_FEATURES
-FACTOR_COLUMNS = ["date"] + FACTOR_FEATURES
+FACTOR_COLUMNS = ["date"] + FACTOR_FEATURES + FACTOR_DATA_COLUMNS + LABEL_COLUMNS
 
 
 @dataclass
@@ -250,22 +279,58 @@ def solve_linear_system(a: List[List[float]], b: List[float]) -> List[float]:
     return [matrix[i][-1] for i in range(n)]
 
 
-def fit_asset_model(train_rows: List[AssetObservation], target: str) -> Tuple[Dict[str, float], Dict[str, float], Dict[str, float], int]:
-    """基于过去已完成后验标签的样本训练线性模型；target 控制训练收益或上涨概率。"""
+def target_value(row: AssetObservation, target: str) -> Optional[float]:
+    """按目标名称取训练标签；端点和30日均价目标分开建模，便于单独评估。"""
 
-    usable_rows = [row for row in train_rows if row.actual_forward_1m_return is not None]
+    if target == "return":
+        return row.actual_forward_1m_return
+    if target == "avg_return":
+        return row.actual_forward_1m_avg_return
+    if target == "up_probability":
+        return None if row.actual_forward_1m_return is None else float(row.actual_forward_1m_return > 0)
+    if target == "avg_up_probability":
+        return None if row.actual_forward_1m_avg_return is None else float(row.actual_forward_1m_avg_return > 0)
+    raise ValueError(f"Unknown model target: {target}")
+
+
+def neutral_intercept(target: str) -> float:
+    """训练样本不足时给出中性截距；概率目标为 0.5，收益目标为 0。"""
+
+    return 0.5 if "probability" in target else 0.0
+
+
+def fit_sklearn_ridge(
+    vectors: List[List[float]],
+    labels: List[float],
+) -> Optional[Tuple[float, List[float], float]]:
+    """优先用 sklearn RidgeCV 拟合标准化后的线性模型；不可用时返回 None。"""
+
+    if RidgeCV is None or len(vectors) < MIN_TRAINING_SAMPLES:
+        return None
+    model = RidgeCV(alphas=SKLEARN_RIDGE_ALPHAS)
+    model.fit([row[1:] for row in vectors], labels)
+    return float(model.intercept_), [float(value) for value in model.coef_], float(model.alpha_)
+
+
+def fit_asset_model(train_rows: List[AssetObservation], target: str) -> Tuple[Dict[str, float], Dict[str, float], Dict[str, float], int]:
+    """基于过去已完成后验标签的样本训练线性模型；优先 sklearn RidgeCV，兜底纯 Python ridge。"""
+
+    usable_rows = [row for row in train_rows if target_value(row, target) is not None]
     sample_size = len(usable_rows)
     defaults = feature_defaults(usable_rows)
     scales = feature_scales(usable_rows, defaults)
     if sample_size < MIN_TRAINING_SAMPLES:
-        intercept = 0.5 if target == "up_probability" else 0.0
-        return {"intercept": intercept}, defaults, scales, sample_size
+        return {"intercept": neutral_intercept(target), "engine_sklearn_ridgecv": 0.0}, defaults, scales, sample_size
 
     vectors = [vectorize(row.features, defaults, scales) for row in usable_rows]
-    if target == "up_probability":
-        labels = [1.0 if (row.actual_forward_1m_return or 0.0) > 0 else 0.0 for row in usable_rows]
-    else:
-        labels = [row.actual_forward_1m_return or 0.0 for row in usable_rows]
+    labels = [target_value(row, target) or 0.0 for row in usable_rows]
+    sklearn_fit = fit_sklearn_ridge(vectors, labels)
+    if sklearn_fit is not None:
+        intercept, coefs, alpha = sklearn_fit
+        coeffs = {"intercept": intercept, "engine_sklearn_ridgecv": 1.0, "ridge_alpha": alpha}
+        coeffs.update({name: coefs[i] for i, name in enumerate(FEATURES)})
+        return coeffs, defaults, scales, sample_size
+
     dim = len(FEATURES) + 1
     xtx = [[0.0 for _ in range(dim)] for _ in range(dim)]
     xty = [0.0 for _ in range(dim)]
@@ -277,7 +342,7 @@ def fit_asset_model(train_rows: List[AssetObservation], target: str) -> Tuple[Di
     for i in range(1, dim):
         xtx[i][i] += RIDGE_LAMBDA
     beta = solve_linear_system(xtx, xty)
-    coeffs = {"intercept": beta[0]}
+    coeffs = {"intercept": beta[0], "engine_sklearn_ridgecv": 0.0, "ridge_alpha": RIDGE_LAMBDA}
     coeffs.update({name: beta[i + 1] for i, name in enumerate(FEATURES)})
     return coeffs, defaults, scales, sample_size
 
@@ -290,7 +355,7 @@ def predict_return(
 ) -> float:
     """用线性模型系数预测当前特征对应的未来收益或上涨概率原始值。"""
 
-    if len(coeffs) == 1:
+    if not all(name in coeffs for name in FEATURES):
         return coeffs.get("intercept", 0.0)
     x = vectorize(features, defaults, scales)
     beta = [coeffs["intercept"]] + [coeffs[name] for name in FEATURES]
@@ -472,8 +537,51 @@ def oos_score_orientation(predictions: List[AssetPrediction], obs: AssetObservat
     return (-1 if should_flip else 1), oos_auc, len(usable_rows)
 
 
-def oos_component_selection(predictions: List[AssetPrediction], obs: AssetObservation) -> Tuple[str, Optional[float], int]:
-    """在 raw/probability/return 三种候选分数里，按历史 OOS AUC 选择当前采用的 score 组件。"""
+def candidate_component_names(predictions: List[AssetPrediction]) -> List[str]:
+    """从历史预测记录中发现可用分数组件；兼容旧报告里没有均价组件的记录。"""
+
+    names = ["raw", "probability", "return", "avg_raw", "avg_probability", "avg_return", "hybrid"]
+    available = []
+    for name in names:
+        key = f"score_{name}_component"
+        if name in {"raw", "hybrid"}:
+            key = "score_raw" if name == "raw" else "score_hybrid_component"
+        if any(key in row.model_coefficients for row in predictions):
+            available.append(name)
+    return available or ["raw"]
+
+
+def component_score(row: AssetPrediction, name: str) -> float:
+    """读取指定候选分数组件；缺失时回退到最终 score。"""
+
+    key_by_name = {
+        "raw": "score_raw",
+        "probability": "score_probability_component",
+        "return": "score_return_component",
+        "avg_raw": "score_avg_raw_component",
+        "avg_probability": "score_avg_probability_component",
+        "avg_return": "score_avg_return_component",
+        "hybrid": "score_hybrid_component",
+    }
+    return row.model_coefficients.get(key_by_name[name], row.score)
+
+
+def component_objective(endpoint_auc: Optional[float], avg_auc_value: Optional[float], obs: AssetObservation) -> Optional[float]:
+    """把端点 AUC 和30日均价 AUC 合成选择目标；QQQ 两者等权，其余资产略偏端点。"""
+
+    values = [value for value in [endpoint_auc, avg_auc_value] if value is not None]
+    if not values:
+        return None
+    if endpoint_auc is None:
+        return avg_auc_value
+    if avg_auc_value is None:
+        return endpoint_auc
+    endpoint_weight = 0.5 if obs.asset == "QQQ" else 0.65
+    return endpoint_weight * endpoint_auc + (1.0 - endpoint_weight) * avg_auc_value
+
+
+def oos_component_selection(predictions: List[AssetPrediction], obs: AssetObservation) -> Tuple[str, Optional[float], int, Optional[float], Optional[float]]:
+    """按历史 OOS 端点 AUC 和均价 AUC 选择当前 score 组件；QQQ 以两类 AUC 等权评估。"""
 
     usable_rows = [
         row for row in predictions
@@ -483,31 +591,29 @@ def oos_component_selection(predictions: List[AssetPrediction], obs: AssetObserv
         and row.label_end_i < obs.price_i
     ]
     if len(usable_rows) < MIN_TRAINING_SAMPLES:
-        return "raw", None, len(usable_rows)
+        return "raw", None, len(usable_rows), None, None
+    if obs.asset == "QQQ":
+        scores = [component_score(row, "return") for row in usable_rows]
+        endpoint_auc = score_auc_from_pairs(scores, [row.actual_up or 0 for row in usable_rows])
+        avg_auc_value = score_auc_from_pairs(scores, [row.actual_avg_up or 0 for row in usable_rows])
+        return "return", component_objective(endpoint_auc, avg_auc_value, obs), len(usable_rows), endpoint_auc, avg_auc_value
     candidates = {
-        "raw": [
-            row.model_coefficients.get("score_raw", row.score)
-            for row in usable_rows
-        ],
-        "probability": [
-            row.model_coefficients.get("score_probability_component", row.score)
-            for row in usable_rows
-        ],
-        "return": [
-            row.model_coefficients.get("score_return_component", row.score)
-            for row in usable_rows
-        ],
+        name: [component_score(row, name) for row in usable_rows]
+        for name in candidate_component_names(usable_rows)
     }
     labels = [row.actual_up or 0 for row in usable_rows]
-    aucs = {
-        name: score_auc_from_pairs(scores, labels)
-        for name, scores in candidates.items()
+    avg_labels = [row.actual_avg_up or 0 for row in usable_rows]
+    endpoint_aucs = {name: score_auc_from_pairs(scores, labels) for name, scores in candidates.items()}
+    avg_aucs = {name: score_auc_from_pairs(scores, avg_labels) for name, scores in candidates.items()}
+    objectives = {
+        name: component_objective(endpoint_aucs[name], avg_aucs[name], obs)
+        for name in candidates
     }
-    available = {name: value for name, value in aucs.items() if value is not None}
+    available = {name: value for name, value in objectives.items() if value is not None}
     if not available:
-        return "raw", None, len(usable_rows)
+        return "raw", None, len(usable_rows), None, None
     best_name = max(available, key=lambda name: available[name] or 0.0)
-    return best_name, available[best_name], len(usable_rows)
+    return best_name, available[best_name], len(usable_rows), endpoint_aucs[best_name], avg_aucs[best_name]
 
 
 def run_walk_forward_predictions(observations: List[AssetObservation]) -> List[AssetPrediction]:
@@ -520,10 +626,16 @@ def run_walk_forward_predictions(observations: List[AssetObservation]) -> List[A
             if row.asset == obs.asset and row.label_end_i is not None and row.label_end_i < obs.price_i
         ]
         return_coeffs, return_defaults, return_scales, sample_size = fit_asset_model(train_rows, "return")
+        avg_return_coeffs, avg_return_defaults, avg_return_scales, _ = fit_asset_model(train_rows, "avg_return")
         score_coeffs, score_defaults, score_scales, _ = fit_asset_model(train_rows, "up_probability")
+        avg_score_coeffs, avg_score_defaults, avg_score_scales, _ = fit_asset_model(train_rows, "avg_up_probability")
         pred = predict_return(obs.features, return_coeffs, return_defaults, return_scales)
+        avg_pred = predict_return(obs.features, avg_return_coeffs, avg_return_defaults, avg_return_scales)
         probability_score = clamp_score(predict_return(obs.features, score_coeffs, score_defaults, score_scales))
+        avg_probability_score = clamp_score(predict_return(obs.features, avg_score_coeffs, avg_score_defaults, avg_score_scales))
         raw_score = blended_score(probability_score, pred)
+        avg_raw_score = blended_score(avg_probability_score, avg_pred)
+        hybrid_score = clamp_score((raw_score + avg_raw_score) / 2.0)
         train_orientation, train_score_auc = score_orientation(
             train_rows,
             return_coeffs,
@@ -539,8 +651,18 @@ def run_walk_forward_predictions(observations: List[AssetObservation]) -> List[A
             "raw": raw_score,
             "probability": probability_score,
             "return": score_from_return(pred),
+            "avg_raw": avg_raw_score,
+            "avg_probability": avg_probability_score,
+            "avg_return": score_from_return(avg_pred),
+            "hybrid": hybrid_score,
         }
-        selected_component, selected_component_auc, selected_component_samples = oos_component_selection(predictions, obs)
+        (
+            selected_component,
+            selected_component_auc,
+            selected_component_samples,
+            selected_component_endpoint_auc,
+            selected_component_avg_auc,
+        ) = oos_component_selection(predictions, obs)
         score = component_scores[selected_component]
         actual = obs.actual_forward_1m_return
         actual_avg = obs.actual_forward_1m_avg_return
@@ -549,17 +671,35 @@ def run_walk_forward_predictions(observations: List[AssetObservation]) -> List[A
         error = None if actual is None else pred - actual
         max_train_label_end_i = max((row.label_end_i for row in train_rows if row.label_end_i is not None), default=None)
         coeffs = {f"return_{key}": value for key, value in return_coeffs.items()}
+        coeffs.update({f"avg_return_{key}": value for key, value in avg_return_coeffs.items()})
         coeffs.update({f"score_{key}": value for key, value in score_coeffs.items()})
+        coeffs.update({f"avg_score_{key}": value for key, value in avg_score_coeffs.items()})
         coeffs["score_probability_component"] = probability_score
         coeffs["score_return_component"] = score_from_return(pred)
+        coeffs["score_avg_probability_component"] = avg_probability_score
+        coeffs["score_avg_return_component"] = score_from_return(avg_pred)
+        coeffs["score_avg_raw_component"] = avg_raw_score
+        coeffs["score_hybrid_component"] = hybrid_score
         coeffs["score_raw"] = raw_score
         coeffs["score_orientation"] = orientation
         coeffs["score_orientation_source"] = 1 if oos_orientation is not None else 0
         coeffs["score_oos_orientation_samples"] = oos_orientation_samples
-        coeffs["score_selected_component"] = {"raw": 0, "probability": 1, "return": 2}[selected_component]
+        coeffs["score_selected_component"] = {
+            "raw": 0,
+            "probability": 1,
+            "return": 2,
+            "avg_raw": 3,
+            "avg_probability": 4,
+            "avg_return": 5,
+            "hybrid": 6,
+        }[selected_component]
         coeffs["score_selected_component_samples"] = selected_component_samples
         if selected_component_auc is not None:
             coeffs["score_selected_component_auc"] = selected_component_auc
+        if selected_component_endpoint_auc is not None:
+            coeffs["score_selected_component_endpoint_auc"] = selected_component_endpoint_auc
+        if selected_component_avg_auc is not None:
+            coeffs["score_selected_component_avg_auc"] = selected_component_avg_auc
         if oos_score_auc is not None:
             coeffs["score_oos_auc_for_orientation"] = oos_score_auc
         if train_score_auc is not None:
@@ -685,8 +825,97 @@ def prediction_metrics(predictions: List[AssetPrediction]) -> Dict[str, object]:
         "score_calibration": score_calibration_summary(predictions),
         "feature_coverage": feature_coverage(predictions),
         "single_feature_auc": single_feature_auc(predictions),
+        "linear_feature_importance": linear_feature_importance(predictions),
         "latest_predictions": latest_by_asset,
     }
+
+
+def coefficient_values(predictions: List[AssetPrediction], asset: str, prefix: str, feature: str) -> List[float]:
+    """提取某个资产、某类模型、某个特征在 walk-forward 过程中的标准化系数序列。"""
+
+    key = f"{prefix}_{feature}"
+    return [
+        row.model_coefficients[key]
+        for row in predictions
+        if row.asset == asset
+        and row.sample_size >= MIN_TRAINING_SAMPLES
+        and key in row.model_coefficients
+    ]
+
+
+def coefficient_summary(values: List[float]) -> Dict[str, object]:
+    """汇总标准化系数的平均方向、绝对强度和符号稳定性。"""
+
+    if not values:
+        return {
+            "mean_coefficient": None,
+            "mean_abs_coefficient": None,
+            "positive_share": None,
+            "negative_share": None,
+            "sign": "insufficient_data",
+        }
+    positive_share = sum(1 for value in values if value > 0) / len(values)
+    negative_share = sum(1 for value in values if value < 0) / len(values)
+    mean_value = statistics.mean(values)
+    if positive_share >= 0.65:
+        sign = "positive"
+    elif negative_share >= 0.65:
+        sign = "negative"
+    else:
+        sign = "mixed"
+    return {
+        "mean_coefficient": round(mean_value, 8),
+        "mean_abs_coefficient": round(statistics.mean(abs(value) for value in values), 8),
+        "positive_share": round(positive_share, 4),
+        "negative_share": round(negative_share, 4),
+        "sign": sign,
+    }
+
+
+def common_sense_note(asset: str, feature: str, sign: str) -> str:
+    """给重要度结果补一条常识校验说明，帮助判断线性模型是否学偏。"""
+
+    if sign == "insufficient_data":
+        return "样本不足，暂不解释。"
+    if feature == "asset_rsi_14" and sign == "negative":
+        return "RSI 越高越容易短期过热，负向系数符合均值回归常识。"
+    if feature == "asset_extension_200dma" and sign == "negative":
+        return "价格越高于 200 日均线越容易偏贵，负向系数符合估值/拥挤降温常识。"
+    if feature == "asset_return_63d" and sign == "positive":
+        return "中期涨幅正向说明模型偏动量解释，适合和过热指标一起看。"
+    if feature == "tbill_3m_rate" and asset == "SGOV" and sign == "positive":
+        return "短债利率越高越利好 SGOV 收益，符合资产属性。"
+    if feature == "breadth_200dma" and sign == "positive":
+        return "市场宽度越好越支持风险资产，方向大体符合常识。"
+    if sign == "mixed":
+        return "符号不稳定，说明当前样本下规律不够稳。"
+    return "方向没有明显违背常识，但需要结合单特征 AUC 和分桶校准确认。"
+
+
+def linear_feature_importance(predictions: List[AssetPrediction]) -> Dict[str, object]:
+    """基于标准化线性系数输出特征重要度；数值越大代表 walk-forward 中影响越强。"""
+
+    prefixes = {
+        "endpoint_return": "return",
+        "avg_price_return": "avg_return",
+        "endpoint_up_probability": "score",
+        "avg_price_up_probability": "avg_score",
+    }
+    out: Dict[str, object] = {}
+    for asset in UNIVERSE:
+        asset_out = {}
+        for target_name, prefix in prefixes.items():
+            target_rows = []
+            for feature in FEATURES:
+                values = coefficient_values(predictions, asset, prefix, feature)
+                summary = coefficient_summary(values)
+                summary["feature"] = feature
+                summary["note"] = common_sense_note(asset, feature, summary["sign"])
+                target_rows.append(summary)
+            target_rows.sort(key=lambda row: row["mean_abs_coefficient"] or 0.0, reverse=True)
+            asset_out[target_name] = target_rows
+        out[asset] = asset_out
+    return out
 
 
 def score_calibration_rows(predictions: List[AssetPrediction], buckets: int = 5) -> List[Dict[str, object]]:
@@ -871,6 +1100,9 @@ def save_prediction_outputs(predictions: List[AssetPrediction], report_prefix: s
     metrics = prediction_metrics(predictions)
     with (REPORT_DIR / f"{name_prefix}prediction_metrics.json").open("w") as f:
         json.dump(metrics, f, indent=2)
+    importance_name = f"{report_prefix}_feature_importance.json" if report_prefix else "feature_importance.json"
+    with (REPORT_DIR / importance_name).open("w") as f:
+        json.dump(metrics.get("linear_feature_importance", {}), f, indent=2)
     return metrics
 
 
